@@ -70,18 +70,4 @@ rimekit-*.zip
 /docs/需求变更记录.html
 /docs/未定项记录.html
 
-# 以下为 v0.1.0 发布后新增规则
-# docs/ 不进入版本控制（发布后禁止提交文档到仓库）
-/docs/
-# .opencode/ 不进入版本控制
-/.opencode/
-# release-notes.md 不进入版本控制（Release 说明由 gh CLI 生成）
-/release-notes.md
-# 根级 scripts/ 不进入版本控制（测试脚本在 apps/windows/.../scripts/ 下）
-/scripts/
-# ime_refs/ 不进入版本控制（探针参考图）
-/ime_refs/
-# Tests 项目仅本地使用，不进入远程仓库
-/apps/windows/RimeKit.Windows.Tests/
-# tools 仅本地使用，不进入远程仓库
-/apps/windows/tools/
+__pycache__/
