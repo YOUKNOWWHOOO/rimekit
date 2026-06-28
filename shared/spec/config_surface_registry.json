@@ -1,0 +1,1083 @@
+{
+  "registry_version": 1,
+  "surfaces": [
+    {
+      "surface_id": "profile_management",
+      "display_name": "输入方案",
+      "config_paths": [
+        "$.profile_settings.enabled_schema_ids",
+        "$.profile_settings.windows_default_schema_id",
+        "$.profile_settings.android_default_schema_id"
+      ],
+      "target_files": [
+        "default.custom.yaml",
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android",
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "config/profile"
+        ],
+        "windows": [
+          "config/profile"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile",
+        "sync_success_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_warning",
+        "auto_action_kind": "none",
+        "entry_point_kind": "none",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "candidate_presentation",
+      "display_name": "显示",
+      "config_paths": [
+        "$.candidate_settings.page_size",
+        "$.candidate_settings.layout",
+        "$.candidate_settings.show_emoji_comments"
+      ],
+      "target_files": [
+        "rime_mint.custom.yaml",
+        "t9.custom.yaml",
+        "weasel.custom.yaml"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android",
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "config/candidate"
+        ],
+        "windows": [
+          "config/candidate"
+        ]
+      },
+      "consistency_cases": [
+        "candidate_layout_horizontal",
+        "sync_success_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_warning",
+        "auto_action_kind": "none",
+        "entry_point_kind": "none",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [
+          "WINDOWS_DPI_STATE_INVALID",
+          "WINDOWS_FONT_MISSING"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "input_behavior",
+      "display_name": "输入",
+      "config_paths": [
+        "$.behavior_settings.simplification_mode",
+        "$.behavior_settings.full_shape_enabled",
+        "$.behavior_settings.ascii_punct_enabled",
+        "$.behavior_settings.emoji_suggestion_enabled",
+        "$.behavior_settings.tone_display_enabled"
+      ],
+      "target_files": [
+        "rime_mint.custom.yaml",
+        "t9.custom.yaml"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android",
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "config/behavior"
+        ],
+        "windows": [
+          "config/behavior"
+        ]
+      },
+      "consistency_cases": [
+        "behavior_switches_enabled",
+        "sync_success_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_warning",
+        "auto_action_kind": "none",
+        "entry_point_kind": "none",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "fuzzy_pinyin",
+      "display_name": "模糊拼音",
+      "config_paths": [
+        "$.fuzzy_pinyin_settings.enabled",
+        "$.fuzzy_pinyin_settings.preset_id",
+        "$.fuzzy_pinyin_settings.target_schema_ids",
+        "$.fuzzy_pinyin_settings.additional_rules"
+      ],
+      "target_files": [
+        "rime_mint.custom.yaml",
+        "t9.custom.yaml"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android",
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "config/fuzzy_pinyin"
+        ],
+        "windows": [
+          "config/fuzzy_pinyin"
+        ]
+      },
+      "consistency_cases": [
+        "fuzzy_for_rime_mint_only",
+        "fuzzy_for_both_schemas"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_warning",
+        "auto_action_kind": "none",
+        "entry_point_kind": "none",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "personalization",
+      "display_name": "预编辑与补充显示",
+      "config_paths": [
+        "$.personalization_settings.symbol_profile_id",
+        "$.personalization_settings.preedit_format_mode",
+        "$.personalization_settings.custom_phrase_mode",
+        "$.personalization_settings.comment_style_variant"
+      ],
+      "target_files": [
+        "rime_mint.custom.yaml",
+        "t9.custom.yaml"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android",
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "config/personalization"
+        ],
+        "windows": [
+          "config/display",
+          "config/input"
+        ]
+      },
+      "consistency_cases": [
+        "personalization_variant"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_warning",
+        "auto_action_kind": "none",
+        "entry_point_kind": "none",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "dictionary_management",
+      "display_name": "词库与自定义词条",
+      "config_paths": [
+        "$.dictionary_settings.enabled_dictionary_ids",
+        "$.dictionary_settings.dictionary_order",
+        "$.dictionary_settings.custom_entries"
+      ],
+      "target_files": [
+        "rime_mint.custom.dict.yaml",
+        "dicts/custom_simple.dict.yaml"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android",
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "resources/dictionaries"
+        ],
+        "windows": [
+          "resources/dictionaries"
+        ]
+      },
+      "consistency_cases": [
+        "dictionary_order_with_custom_entries"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_warning",
+        "auto_action_kind": "none",
+        "entry_point_kind": "none",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "model_management",
+      "display_name": "模型与调优",
+      "config_paths": [
+        "$.model_settings.enabled_model_ids",
+        "$.model_settings.active_model_id",
+        "$.model_settings.model_root",
+        "$.model_settings.model_versions",
+        "$.model_settings.contextual_suggestions_enabled",
+        "$.model_settings.collocation_max_length",
+        "$.model_settings.collocation_min_length",
+        "$.model_settings.max_homophones",
+        "$.model_settings.max_homographs"
+      ],
+      "target_files": [
+        "rime_mint.custom.yaml",
+        "t9.custom.yaml"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android",
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "resources/models"
+        ],
+        "windows": [
+          "resources/models"
+        ]
+      },
+      "consistency_cases": [
+        "model_tuning_enabled"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_warning",
+        "auto_action_kind": "none",
+        "entry_point_kind": "none",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "sync_management",
+      "display_name": "第一方网络同步与导入导出",
+      "config_paths": [
+        "$.sync_settings.android_import_root",
+        "$.sync_settings.windows_target_root",
+        "$.sync_settings.export_root",
+        "$.sync_settings.backup_root",
+        "$.sync_settings.snapshot_retention_limit"
+      ],
+      "target_files": [
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android",
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "sync/paths"
+        ],
+        "windows": [
+          "sync/paths"
+        ]
+      },
+      "consistency_cases": [
+        "sync_success_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "none",
+        "entry_point_kind": "directory_authorization",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "directory_authorization",
+        "directory_open",
+        "retry",
+        "rollback"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "ANDROID_PERMISSION_MISSING",
+          "WINDOWS_TARGET_ROOT_INVALID"
+        ],
+        "warning_codes": [
+          "EXPORT_FAILED"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "android_layout",
+      "display_name": "Android 中文 9 键与候选区参数",
+      "config_paths": [
+        "$.android_settings.keyboard_layout",
+        "$.android_settings.candidate_text_size",
+        "$.android_settings.candidate_view_height"
+      ],
+      "target_files": [
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "android"
+      ],
+      "readonly_platforms": [
+        "windows"
+      ],
+      "page_sections": {
+        "android": [
+          "config/android_layout"
+        ],
+        "windows": [
+          "readonly/android_layout"
+        ]
+      },
+      "consistency_cases": [
+        "android_layout_manifest_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "none",
+        "entry_point_kind": "deploy_confirmation",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "deploy_confirmation",
+        "settings_deep_link",
+        "input_method_picker",
+        "retry",
+        "rollback"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "ANDROID_IME_NOT_ENABLED",
+          "ANDROID_IME_NOT_SELECTED",
+          "ANDROID_RECHECK_FAILED"
+        ],
+        "warning_codes": [
+          "ANDROID_IME_SETTINGS_JUMP_FAILED",
+          "ANDROID_IME_PICKER_UNAVAILABLE"
+        ],
+        "prompt_codes": [
+          "ANDROID_PERMISSION_MISSING"
+        ]
+      }
+    },
+    {
+      "surface_id": "windows_presentation",
+      "display_name": "Windows 承载器显示项",
+      "config_paths": [
+        "$.windows_settings.color_scheme",
+        "$.windows_settings.color_scheme_dark",
+        "$.windows_settings.font_face",
+        "$.windows_settings.font_point",
+        "$.windows_settings.label_font_face",
+        "$.windows_settings.label_font_point",
+        "$.windows_settings.comment_font_face",
+        "$.windows_settings.comment_font_point",
+        "$.windows_settings.show_notification",
+        "$.windows_settings.notification_time_ms",
+        "$.windows_settings.global_ascii",
+        "$.windows_settings.inline_preedit",
+        "$.windows_settings.preedit_type",
+        "$.windows_settings.fullscreen",
+        "$.windows_settings.vertical_text",
+        "$.windows_settings.vertical_text_left_to_right",
+        "$.windows_settings.vertical_text_with_wrap",
+        "$.windows_settings.vertical_auto_reverse",
+        "$.windows_settings.label_format",
+        "$.windows_settings.mark_text",
+        "$.windows_settings.ascii_tip_follow_cursor",
+        "$.windows_settings.enhanced_position",
+        "$.windows_settings.display_tray_icon",
+        "$.windows_settings.antialias_mode",
+        "$.windows_settings.candidate_abbreviate_length",
+        "$.windows_settings.paging_on_scroll",
+        "$.windows_settings.hover_type",
+        "$.windows_settings.click_to_capture",
+        "$.windows_settings.layout_baseline",
+        "$.windows_settings.layout_linespacing",
+        "$.windows_settings.layout_align_type",
+        "$.windows_settings.layout_max_height",
+        "$.windows_settings.layout_max_width",
+        "$.windows_settings.layout_min_height",
+        "$.windows_settings.layout_min_width",
+        "$.windows_settings.layout_border_width",
+        "$.windows_settings.layout_margin_x",
+        "$.windows_settings.layout_margin_y",
+        "$.windows_settings.layout_spacing",
+        "$.windows_settings.layout_candidate_spacing",
+        "$.windows_settings.layout_hilite_spacing",
+        "$.windows_settings.layout_hilite_padding",
+        "$.windows_settings.layout_hilite_padding_x",
+        "$.windows_settings.layout_hilite_padding_y",
+        "$.windows_settings.layout_shadow_radius",
+        "$.windows_settings.layout_shadow_offset_x",
+        "$.windows_settings.layout_shadow_offset_y",
+        "$.windows_settings.layout_corner_radius",
+        "$.windows_settings.dpi_scale_mode"
+      ],
+      "target_files": [
+        "weasel.custom.yaml"
+      ],
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "edit_platforms": [
+        "windows"
+      ],
+      "readonly_platforms": [
+        "android"
+      ],
+      "page_sections": {
+        "android": [
+          "readonly/windows_display"
+        ],
+        "windows": [
+          "config/windows_display"
+        ]
+      },
+      "consistency_cases": [
+        "windows_display_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_warning",
+        "auto_action_kind": "detect_only",
+        "entry_point_kind": "logs_open",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "logs_open",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [
+          "WINDOWS_FONT_MISSING",
+          "WINDOWS_DPI_STATE_INVALID"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "android_carrier_installation",
+      "display_name": "Android 承载器安装面",
+      "config_paths": [
+        "$.profile_settings.android_default_schema_id"
+      ],
+      "target_files": [
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android"
+      ],
+      "edit_platforms": [
+        "android"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "detect/carrier_install"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_error",
+        "auto_action_kind": "install_request",
+        "entry_point_kind": "install_url",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "install_url",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "ANDROID_CARRIER_MISSING",
+          "ANDROID_CARRIER_INSTALL_RECHECK_FAILED"
+        ],
+        "warning_codes": [],
+        "prompt_codes": [
+          "ANDROID_CARRIER_INSTALL_REQUEST_FAILED"
+        ]
+      }
+    },
+    {
+      "surface_id": "android_rime_plugin_installation",
+      "display_name": "Android Rime 插件安装面",
+      "config_paths": [
+        "$.profile_settings.android_default_schema_id"
+      ],
+      "target_files": [
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android"
+      ],
+      "edit_platforms": [
+        "android"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "detect/plugin_install"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_error",
+        "auto_action_kind": "install_request",
+        "entry_point_kind": "install_url",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "install_url",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "ANDROID_RIME_PLUGIN_MISSING",
+          "ANDROID_RIME_PLUGIN_INSTALL_RECHECK_FAILED"
+        ],
+        "warning_codes": [],
+        "prompt_codes": [
+          "ANDROID_RIME_PLUGIN_INSTALL_REQUEST_FAILED"
+        ]
+      }
+    },
+    {
+      "surface_id": "android_carrier_uninstallation",
+      "display_name": "Android 承载器卸载面",
+      "config_paths": [
+        "$.profile_settings.android_default_schema_id"
+      ],
+      "target_files": [
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android"
+      ],
+      "edit_platforms": [
+        "android"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "detect/carrier_uninstall"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "reinstall_request",
+        "entry_point_kind": "uninstall_launch",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "uninstall_launch",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [
+          "ANDROID_CARRIER_UNINSTALL_REQUEST_FAILED"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "android_rime_plugin_uninstallation",
+      "display_name": "Android Rime 插件卸载面",
+      "config_paths": [
+        "$.profile_settings.android_default_schema_id"
+      ],
+      "target_files": [
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android"
+      ],
+      "edit_platforms": [
+        "android"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "detect/plugin_uninstall"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "reinstall_request",
+        "entry_point_kind": "uninstall_launch",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "uninstall_launch",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [
+          "ANDROID_RIME_PLUGIN_UNINSTALL_REQUEST_FAILED"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "android_ime_enablement",
+      "display_name": "Android 输入法启用面",
+      "config_paths": [
+        "$.profile_settings.android_default_schema_id"
+      ],
+      "target_files": [
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android"
+      ],
+      "edit_platforms": [
+        "android"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "detect/ime_enablement"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "open_settings",
+        "entry_point_kind": "settings_deep_link",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "settings_deep_link",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "ANDROID_IME_NOT_ENABLED"
+        ],
+        "warning_codes": [
+          "ANDROID_IME_SETTINGS_JUMP_FAILED"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "android_ime_selection",
+      "display_name": "Android 输入法切换面",
+      "config_paths": [
+        "$.profile_settings.android_default_schema_id"
+      ],
+      "target_files": [
+        "android_apply_manifest.json"
+      ],
+      "platforms": [
+        "android"
+      ],
+      "edit_platforms": [
+        "android"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "android": [
+          "detect/ime_selection"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "open_picker",
+        "entry_point_kind": "input_method_picker",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "input_method_picker",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "ANDROID_IME_NOT_SELECTED"
+        ],
+        "warning_codes": [
+          "ANDROID_IME_PICKER_UNAVAILABLE"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "windows_weasel_installation",
+      "display_name": "Windows 承载器安装面",
+      "config_paths": [
+        "$.profile_settings.windows_default_schema_id",
+        "$.sync_settings.windows_target_root"
+      ],
+      "target_files": [
+        "weasel.custom.yaml"
+      ],
+      "platforms": [
+        "windows"
+      ],
+      "edit_platforms": [
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "windows": [
+          "detect/weasel_install"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_error",
+        "auto_action_kind": "install_request",
+        "entry_point_kind": "install_url",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "install_url",
+        "installer_launch",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "WINDOWS_WEASEL_MISSING",
+          "WINDOWS_WEASEL_INSTALL_RECHECK_FAILED",
+          "WINDOWS_WEASEL_REINSTALL_REQUIRED"
+        ],
+        "warning_codes": [
+          "WINDOWS_WEASEL_DOWNLOAD_FAILED"
+        ],
+        "prompt_codes": [
+          "WINDOWS_WEASEL_INSTALL_LAUNCH_FAILED"
+        ]
+      }
+    },
+    {
+      "surface_id": "windows_weasel_uninstallation",
+      "display_name": "Windows 承载器卸载面",
+      "config_paths": [
+        "$.sync_settings.windows_target_root"
+      ],
+      "target_files": [
+        "weasel.custom.yaml"
+      ],
+      "platforms": [
+        "windows"
+      ],
+      "edit_platforms": [
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "windows": [
+          "detect/weasel_uninstall"
+        ]
+      },
+      "consistency_cases": [
+        "baseline_default_profile"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "reinstall_request",
+        "entry_point_kind": "uninstall_launch",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "uninstall_launch",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [
+          "WINDOWS_WEASEL_UNINSTALL_LAUNCH_FAILED"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "windows_deployer_repair",
+      "display_name": "Windows 部署器修复面",
+      "config_paths": [
+        "$.sync_settings.windows_target_root"
+      ],
+      "target_files": [
+        "weasel.custom.yaml"
+      ],
+      "platforms": [
+        "windows"
+      ],
+      "edit_platforms": [
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "windows": [
+          "detect/deployer_repair"
+        ]
+      },
+      "consistency_cases": [
+        "windows_display_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_error",
+        "auto_action_kind": "repair_check",
+        "entry_point_kind": "logs_open",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "logs_open",
+        "retry",
+        "installer_launch"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "WINDOWS_DEPLOYER_MISSING"
+        ],
+        "warning_codes": [],
+        "prompt_codes": [
+          "WINDOWS_DEPLOYER_REPAIR_FAILED"
+        ]
+      }
+    },
+    {
+      "surface_id": "windows_target_root_repair",
+      "display_name": "Windows 目标目录修复面",
+      "config_paths": [
+        "$.sync_settings.windows_target_root"
+      ],
+      "target_files": [
+        "weasel.custom.yaml"
+      ],
+      "platforms": [
+        "windows"
+      ],
+      "edit_platforms": [
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "windows": [
+          "detect/target_root"
+        ]
+      },
+      "consistency_cases": [
+        "sync_success_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "open_directory",
+        "entry_point_kind": "directory_open",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "directory_open",
+        "retry"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "WINDOWS_TARGET_ROOT_INVALID"
+        ],
+        "warning_codes": [],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "windows_logs_access",
+      "display_name": "Windows 日志定位面",
+      "config_paths": [
+        "$.sync_settings.export_root",
+        "$.sync_settings.backup_root"
+      ],
+      "target_files": [
+        "weasel.custom.yaml"
+      ],
+      "platforms": [
+        "windows"
+      ],
+      "edit_platforms": [
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "page_sections": {
+        "windows": [
+          "diagnose/logs"
+        ]
+      },
+      "consistency_cases": [
+        "sync_success_contract"
+      ],
+      "feedback_contract": {
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "open_logs",
+        "entry_point_kind": "logs_open",
+        "log_required": true
+      },
+      "entry_point_kinds": [
+        "logs_open",
+        "retry",
+        "rollback"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [
+          "WINDOWS_DEPLOY_FAILED",
+          "WINDOWS_RECHECK_FAILED"
+        ],
+        "warning_codes": [
+          "WINDOWS_DEPLOYER_REPAIR_FAILED"
+        ],
+        "prompt_codes": []
+      }
+    },
+    {
+      "surface_id": "pinyin_compatibility",
+      "display_name": "拼音兼容性",
+      "config_paths": [
+        "$.pinyin_settings.ue_compat_enabled"
+      ],
+      "target_files": [
+        "rime_mint.custom.yaml"
+      ],
+      "edit_platforms": [
+        "windows"
+      ],
+      "readonly_platforms": [],
+      "consistency_cases": [],
+      "entry_point_kinds": [
+        "cli_set_config"
+      ],
+      "surface_failure_codes": {
+        "blocking_codes": [],
+        "warning_codes": [],
+        "prompt_codes": []
+      },
+      "feedback_contract": {
+        "log_required": true,
+        "display_kind": "explicit_prompt",
+        "auto_action_kind": "detect_only",
+        "entry_point_kind": "none"
+      }
+    }
+  ]
+}

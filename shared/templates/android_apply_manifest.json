@@ -1,0 +1,11 @@
+{
+  "platform": "android",
+  "carrier_id": "__CARRIER_ID__",
+  "required_schema_id": "__REQUIRED_SCHEMA_ID__",
+  "keyboard_layout": "__KEYBOARD_LAYOUT__",
+  "candidate_text_size": "__CANDIDATE_TEXT_SIZE__",
+  "candidate_view_height": "__CANDIDATE_VIEW_HEIGHT__",
+  "manual_steps": "__MANUAL_STEPS__",
+  "recheck_items": "__RECHECK_ITEMS__",
+  "delivery_mode": "__DELIVERY_MODE__"
+}

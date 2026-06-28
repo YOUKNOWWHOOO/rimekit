@@ -1,0 +1,261 @@
+{
+  "manifest_version": 1,
+  "schemas": [
+    {
+      "schema_id": "rime_mint",
+      "display_name": "薄荷拼音-全拼输入",
+      "platforms": [
+        "android",
+        "windows"
+      ],
+      "enabled_by_default": true,
+      "depends_on_schema_ids": [],
+      "generated_target_files": [
+        "default.custom.yaml",
+        "rime_mint.custom.yaml",
+        "rime_mint.custom.dict.yaml"
+      ],
+      "config_surface_ids": [
+        "profile_management",
+        "candidate_presentation",
+        "input_behavior",
+        "fuzzy_pinyin",
+        "personalization",
+        "dictionary_management",
+        "model_management"
+      ],
+      "source_class": "official_current",
+      "source_url": "https://github.com/Mintimate/oh-my-rime"
+    },
+    {
+      "schema_id": "t9",
+      "display_name": "九键方案",
+      "platforms": [
+        "android"
+      ],
+      "enabled_by_default": true,
+      "depends_on_schema_ids": [],
+      "generated_target_files": [
+        "default.custom.yaml",
+        "t9.custom.yaml",
+        "android_apply_manifest.json"
+      ],
+      "config_surface_ids": [
+        "profile_management",
+        "candidate_presentation",
+        "input_behavior",
+        "fuzzy_pinyin",
+        "personalization",
+        "model_management",
+        "android_layout"
+      ],
+      "source_class": "official_current",
+      "source_url": "https://github.com/Mintimate/oh-my-rime"
+    }
+  ],
+  "dictionaries": [
+    {
+      "dictionary_id": "moetype",
+      "display_name": "moetype",
+      "source": "https://github.com/suiginko/moetype",
+      "source_class": "product_fixed_decision",
+      "enabled_by_default": true,
+      "target_file": "rime_mint.custom.dict.yaml",
+      "orderable": true,
+      "source_type": "git_repository",
+      "version_or_updated_at": "tracked_by_snapshot",
+      "target_mapping": {
+        "import_into": "rime_mint.custom.dict.yaml",
+        "generated_file": null
+      },
+      "supports_user_entries": false
+    },
+    {
+      "dictionary_id": "zhwiki",
+      "display_name": "zhwiki",
+      "source": "https://github.com/felixonmars/fcitx5-pinyin-zhwiki",
+      "source_class": "product_fixed_decision",
+      "enabled_by_default": false,
+      "expected_files": ["zhwiki-"],
+      "target_file": "rime_mint.custom.dict.yaml",
+      "orderable": true,
+      "source_type": "direct_download",
+      "version_or_updated_at": "tracked_by_snapshot",
+      "target_mapping": {
+        "import_into": "rime_mint.custom.dict.yaml",
+        "generated_file": null
+      },
+      "supports_user_entries": false
+    },
+    {
+      "dictionary_id": "sogou_network_popular_words",
+      "display_name": "搜狗网络流行新词",
+      "source": "https://pinyin.sogou.com/dict/detail/index/4",
+      "download_url": "https://pinyin.sogou.com/d/dict/download_cell.php?id=4&name=%E7%BD%91%E7%BB%9C%E6%B5%81%E8%A1%8C%E6%96%B0%E8%AF%8D&f=detail",
+      "source_class": "product_fixed_decision",
+      "enabled_by_default": true,
+      "target_file": "rime_mint.custom.dict.yaml",
+      "orderable": true,
+      "source_type": "remote_catalog",
+      "version_or_updated_at": "tracked_by_snapshot",
+      "target_mapping": {
+        "import_into": "rime_mint.custom.dict.yaml",
+        "generated_file": null
+      },
+      "supports_user_entries": false
+    },
+    {
+      "dictionary_id": "custom_simple",
+      "display_name": "用户词条",
+      "source": "official_current",
+      "source_class": "official_current",
+      "enabled_by_default": true,
+      "target_file": "dicts/custom_simple.dict.yaml",
+      "orderable": true,
+      "source_type": "generated",
+      "version_or_updated_at": "tracked_by_snapshot",
+      "target_mapping": {
+        "import_into": "rime_mint.custom.dict.yaml",
+        "generated_file": "dicts/custom_simple.dict.yaml"
+      },
+      "supports_user_entries": true
+    }
+  ],
+  "models": [
+    {
+      "model_id": "wanxiang_lts_zh_hans",
+      "display_name": "万象官方语法模型（简体）",
+      "enabled_by_default": false,
+      "install_kind": "direct_binary",
+      "expected_files": [
+        "wanxiang-lts-zh-hans.gram"
+      ],
+      "supports_contextual_suggestions": true,
+      "source_class": "official_current",
+      "source_url": "https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram",
+      "bootstrap_source_url": "https://github.com/amzxyz/RIME-LMDG/releases"
+    }
+  ],
+  "feature_presets": {
+    "fuzzy_pinyin_presets": [
+      {
+        "preset_id": "cn_common",
+        "display_name": "常用模糊拼音",
+        "supported_schema_ids": [
+          "rime_mint",
+          "t9"
+        ],
+        "parameters": {
+          "algebra_rules": [
+            "derive/zh/z",
+            "derive/ch/c",
+            "derive/sh/s"
+          ]
+        }
+      }
+    ],
+    "symbol_profiles": [
+      {
+        "preset_id": "default",
+        "display_name": "默认符号配置",
+        "supported_schema_ids": [
+          "rime_mint",
+          "t9"
+        ],
+        "parameters": {
+          "style_variant": "default"
+        }
+      }
+    ],
+    "preedit_profiles": [
+      {
+        "preset_id": "upstream_default",
+        "display_name": "上游默认预编辑",
+        "supported_schema_ids": [
+          "rime_mint",
+          "t9"
+        ],
+        "parameters": {
+          "mode": "upstream_default"
+        }
+      },
+      {
+        "preset_id": "raw_code",
+        "display_name": "原始编码显示",
+        "supported_schema_ids": [
+          "rime_mint",
+          "t9"
+        ],
+        "parameters": {
+          "mode": "raw_code"
+        }
+      },
+      {
+        "preset_id": "translated_code",
+        "display_name": "翻译编码显示",
+        "supported_schema_ids": [
+          "rime_mint",
+          "t9"
+        ],
+        "parameters": {
+          "mode": "translated_code"
+        }
+      }
+    ]
+  },
+  "template_files": [
+    {
+      "file_name": "default.custom.yaml",
+      "source_class": "official_current",
+      "platforms": [
+        "android",
+        "windows"
+      ]
+    },
+    {
+      "file_name": "rime_mint.custom.yaml",
+      "source_class": "official_current",
+      "platforms": [
+        "android",
+        "windows"
+      ]
+    },
+    {
+      "file_name": "t9.custom.yaml",
+      "source_class": "product_specific_output",
+      "platforms": [
+        "android"
+      ]
+    },
+    {
+      "file_name": "rime_mint.custom.dict.yaml",
+      "source_class": "official_current",
+      "platforms": [
+        "android",
+        "windows"
+      ]
+    },
+    {
+      "file_name": "dicts/custom_simple.dict.yaml",
+      "source_class": "official_current",
+      "platforms": [
+        "android",
+        "windows"
+      ]
+    },
+    {
+      "file_name": "weasel.custom.yaml",
+      "source_class": "official_current",
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
+      "file_name": "android_apply_manifest.json",
+      "source_class": "product_specific_output",
+      "platforms": [
+        "android"
+      ]
+    }
+  ]
+}

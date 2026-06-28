@@ -1,0 +1,1002 @@
+[
+  {
+    "action_id": "gui_detect_carrier_status",
+    "page": "承载器",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "承载器"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "BtnCarrierDetect"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_detect_scheme_status",
+    "page": "输入方案",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入方案"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测输入方案状态"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_detect_dictionary_status",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_detect_model_status",
+    "page": "语法模型",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "语法模型"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地语法模型"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_apply_display_settings",
+    "page": "输入设置",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入设置"
+      },
+      {
+        "kind": "select_sub_tab",
+        "page": "显示"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_应用设置"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_detect_current_settings",
+    "page": "输入设置",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入设置"
+      },
+      {
+        "kind": "select_sub_tab",
+        "page": "显示"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测目前设置"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_install_scheme",
+    "page": "输入方案",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入方案"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_下载并安装输入方案"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_update_scheme",
+    "page": "输入方案",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入方案"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_更新输入方案"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_uninstall_scheme",
+    "page": "输入方案",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入方案"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_卸载输入方案"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_install_dictionary",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_index": 0
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_下载并部署词库"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_update_dictionary",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_index": 0
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_更新词库"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_uninstall_dictionary",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_index": 0
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_卸载词库"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_install_dictionary_sogou",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_index": 1
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_下载并部署词库"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_update_dictionary_sogou",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_index": 1
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_更新词库"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_uninstall_dictionary_sogou",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_index": 1
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_卸载词库"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_install_model",
+    "page": "语法模型",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "语法模型"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地语法模型"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_modelListBox",
+        "select_index": 0
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_下载并部署语法模型"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_update_model",
+    "page": "语法模型",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "语法模型"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地语法模型"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_modelListBox",
+        "select_index": 0
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_更新语法模型"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_uninstall_model",
+    "page": "语法模型",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "语法模型"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地语法模型"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_modelListBox",
+        "select_index": 0
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_卸载语法模型"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_install_carrier",
+    "page": "承载器",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "承载器"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_下载并安装小狼毫"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_update_carrier",
+    "page": "承载器",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "承载器"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_更新小狼毫"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 180000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_uninstall_carrier",
+    "page": "承载器",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "承载器"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_卸载小狼毫"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_detect_dictionary_item_status",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_index": 0
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测词库状态"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_detect_model_item_status",
+    "page": "语法模型",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "语法模型"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地语法模型"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_modelListBox",
+        "select_index": 0
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测语法模型状态"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_detect_custom_entries",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_text": "用户词条"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测目前用户词条"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_apply_custom_entries",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "词库"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测本地词库"
+      },
+      {
+        "kind": "select_list_item",
+        "list_control_name": "_dictionaryListBox",
+        "select_text": "用户词条"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_应用用户词条"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_reset_settings",
+    "page": "输入设置",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入设置"
+      },
+      {
+        "kind": "select_sub_tab",
+        "page": "显示"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_重置设置"
+      }
+    ],
+    "wait_for": {
+      "kind": "status_text_contains",
+      "timeout_ms": 3000
+    }
+  },
+  {
+    "action_id": "gui_sync_with_android",
+    "page": "同步",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "同步"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_和安卓端进行同步"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/latest_sync_status.json",
+      "timeout_ms": 30000
+    }
+  },
+  {
+    "action_id": "gui_export_user_config",
+    "page": "同步",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "同步"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_导出用户配置"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    }
+  },
+  {
+    "action_id": "gui_import_user_config",
+    "page": "同步",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "同步"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_导入用户配置"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "gui_detect_input_settings",
+    "page": "输入设置",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入设置"
+      },
+      {
+        "kind": "select_sub_tab",
+        "page": "输入"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_检测目前设置"
+      }
+    ],
+    "wait_for": {
+      "kind": "diagnostic_exists",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "timeout_ms": 10000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_diagnostic.json",
+      "property": "phase",
+      "value": "detect"
+    }
+  },
+  {
+    "action_id": "gui_reset_input_settings",
+    "page": "输入设置",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入设置"
+      },
+      {
+        "kind": "select_sub_tab",
+        "page": "输入"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_重置设置"
+      }
+    ],
+    "wait_for": {
+      "kind": "status_text_contains",
+      "timeout_ms": 3000
+    }
+  },
+  {
+    "action_id": "gui_apply_input_settings",
+    "page": "输入设置",
+    "trigger_kind": "gui_click",
+    "steps": [
+      {
+        "kind": "select_top_tab",
+        "page": "输入设置"
+      },
+      {
+        "kind": "select_sub_tab",
+        "page": "输入"
+      },
+      {
+        "kind": "click_button",
+        "control_name": "Btn_应用设置"
+      }
+    ],
+    "wait_for": {
+      "kind": "file_exists",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "timeout_ms": 60000
+    },
+    "assert": {
+      "kind": "json_property_equals",
+      "path": "workspace/windows/state/last_recheck_summary.json",
+      "property": "status",
+      "value": "completed"
+    }
+  },
+  {
+    "action_id": "cli_doctor",
+    "page": "backend",
+    "trigger_kind": "cli_command",
+    "command": "doctor",
+    "arguments": [
+      "--config",
+      "workspace/windows/state/current_config_model.json"
+    ]
+  },
+  {
+    "action_id": "cli_print_config",
+    "page": "backend",
+    "trigger_kind": "cli_command",
+    "command": "print-config",
+    "arguments": [
+      "--config",
+      "workspace/windows/state/current_config_model.json"
+    ]
+  },
+  {
+    "action_id": "cli_install_rime_mint",
+    "page": "backend",
+    "trigger_kind": "cli_command",
+    "command": "install-resource",
+    "arguments": [
+      "--resource-id",
+      "rime_mint"
+    ]
+  },
+  {
+    "action_id": "check_installed_resources",
+    "page": "backend",
+    "trigger_kind": "check_file",
+    "target": "workspace/windows/state/installed_resources.json"
+  },
+  {
+    "action_id": "check_last_diagnostic",
+    "page": "backend",
+    "trigger_kind": "check_file",
+    "target": "workspace/windows/state/last_diagnostic.json"
+  },
+  {
+    "action_id": "validate_recheck_summary",
+    "page": "backend",
+    "trigger_kind": "validate_json",
+    "target": "workspace/windows/state/last_recheck_summary.json",
+    "assert": {
+      "kind": "json_property_equals",
+      "property": "status",
+      "value": "completed"
+    }
+  }
+]

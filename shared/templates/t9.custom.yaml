@@ -1,0 +1,26 @@
+patch:
+  style/candidate_list_layout: "__CANDIDATE_LAYOUT__"
+  style/comment_format: "__COMMENT_FORMAT__"
+  switches:
+    - name: ascii_mode
+      reset: 0
+      states:
+        - "__ASCII_MODE_OFF__"
+        - "__ASCII_MODE_ON__"
+    - name: full_shape
+      reset: "__FULL_SHAPE_RESET__"
+      states:
+        - "__FULL_SHAPE_OFF__"
+        - "__FULL_SHAPE_ON__"
+  translator/comment_format:
+    - "__TRANSLATOR_COMMENT_FORMAT__"
+  recognizer/patterns/punct: "__ASCII_PUNCT_PATTERN__"
+  punctuator/half_shape: "__HALF_SHAPE_PROFILE__"
+  speller/algebra: "__FUZZY_ALGEBRA__"
+  engine/filters: "__ENGINE_FILTERS__"
+  custom_phrase/user_dict: "__CUSTOM_PHRASE_MODE__"
+  translator/contextual_suggestions: "__CONTEXTUAL_SUGGESTIONS__"
+  translator/collocation_max_length: "__COLLOCATION_MAX_LENGTH__"
+  translator/collocation_min_length: "__COLLOCATION_MIN_LENGTH__"
+  translator/max_homophones: "__MAX_HOMOPHONES__"
+  translator/max_homographs: "__MAX_HOMOGRAPHS__"

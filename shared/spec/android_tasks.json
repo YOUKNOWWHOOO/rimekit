@@ -1,0 +1,662 @@
+{
+  "manifest_version": 1,
+  "platform": "android",
+  "tasks": [
+    {
+      "task_id": "android_detect_carrier_presence",
+      "phase": "detect",
+      "title": "检测 Android 承载器",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [],
+      "success_criteria": [
+        "carrier_available"
+      ],
+      "failure_codes": [
+        "ANDROID_CARRIER_MISSING"
+      ],
+      "outputs": [
+        "carrier_probe_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "install_url",
+        "retry"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_request_carrier_install",
+      "phase": "detect",
+      "title": "发起 Android 承载器安装请求",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_detect_carrier_presence"
+      ],
+      "success_criteria": [
+        "carrier_install_requested"
+      ],
+      "failure_codes": [
+        "ANDROID_CARRIER_INSTALL_REQUEST_FAILED"
+      ],
+      "outputs": [
+        "carrier_install_request_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "install_request",
+      "entry_points": [
+        "install_url",
+        "retry"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": [
+        "ANDROID_CARRIER_MISSING"
+      ]
+    },
+    {
+      "task_id": "android_verify_carrier_installation",
+      "phase": "recheck",
+      "title": "安装后回检 Android 承载器",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_request_carrier_install"
+      ],
+      "success_criteria": [
+        "carrier_available"
+      ],
+      "failure_codes": [
+        "ANDROID_CARRIER_INSTALL_RECHECK_FAILED"
+      ],
+      "outputs": [
+        "carrier_install_recheck_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "retry",
+        "install_url"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_detect_rime_plugin_presence",
+      "phase": "detect",
+      "title": "检测 Android Rime 插件",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [],
+      "success_criteria": [
+        "rime_plugin_available"
+      ],
+      "failure_codes": [
+        "ANDROID_RIME_PLUGIN_MISSING"
+      ],
+      "outputs": [
+        "plugin_probe_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "install_url",
+        "retry"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_request_rime_plugin_install",
+      "phase": "detect",
+      "title": "发起 Android Rime 插件安装请求",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_detect_rime_plugin_presence"
+      ],
+      "success_criteria": [
+        "rime_plugin_install_requested"
+      ],
+      "failure_codes": [
+        "ANDROID_RIME_PLUGIN_INSTALL_REQUEST_FAILED"
+      ],
+      "outputs": [
+        "plugin_install_request_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "install_request",
+      "entry_points": [
+        "install_url",
+        "retry"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": [
+        "ANDROID_RIME_PLUGIN_MISSING"
+      ]
+    },
+    {
+      "task_id": "android_verify_rime_plugin_installation",
+      "phase": "recheck",
+      "title": "安装后回检 Android Rime 插件",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_request_rime_plugin_install"
+      ],
+      "success_criteria": [
+        "rime_plugin_available"
+      ],
+      "failure_codes": [
+        "ANDROID_RIME_PLUGIN_INSTALL_RECHECK_FAILED"
+      ],
+      "outputs": [
+        "plugin_install_recheck_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "retry",
+        "install_url"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_request_carrier_uninstall",
+      "phase": "detect",
+      "title": "发起 Android 承载器卸载入口",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_detect_carrier_presence"
+      ],
+      "success_criteria": [
+        "carrier_uninstall_requested"
+      ],
+      "failure_codes": [
+        "ANDROID_CARRIER_UNINSTALL_REQUEST_FAILED"
+      ],
+      "outputs": [
+        "carrier_uninstall_request_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "reinstall_request",
+      "entry_points": [
+        "uninstall_launch",
+        "retry"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_request_rime_plugin_uninstall",
+      "phase": "detect",
+      "title": "发起 Android Rime 插件卸载入口",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_detect_rime_plugin_presence"
+      ],
+      "success_criteria": [
+        "plugin_uninstall_requested"
+      ],
+      "failure_codes": [
+        "ANDROID_RIME_PLUGIN_UNINSTALL_REQUEST_FAILED"
+      ],
+      "outputs": [
+        "plugin_uninstall_request_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "reinstall_request",
+      "entry_points": [
+        "uninstall_launch",
+        "retry"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_open_ime_settings",
+      "phase": "detect",
+      "title": "打开 Android 输入法设置",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_verify_carrier_installation",
+        "android_verify_rime_plugin_installation"
+      ],
+      "success_criteria": [
+        "ime_settings_opened"
+      ],
+      "failure_codes": [
+        "ANDROID_IME_NOT_ENABLED",
+        "ANDROID_IME_SETTINGS_JUMP_FAILED"
+      ],
+      "outputs": [
+        "ime_settings_entry_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "open_settings",
+      "entry_points": [
+        "settings_deep_link",
+        "retry"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [
+        "manual_steps"
+      ],
+      "manual_action_codes": [
+        "ANDROID_IME_NOT_ENABLED"
+      ]
+    },
+    {
+      "task_id": "android_open_ime_picker",
+      "phase": "detect",
+      "title": "打开 Android 输入法选择器",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_open_ime_settings"
+      ],
+      "success_criteria": [
+        "ime_picker_opened"
+      ],
+      "failure_codes": [
+        "ANDROID_IME_NOT_SELECTED",
+        "ANDROID_IME_PICKER_UNAVAILABLE"
+      ],
+      "outputs": [
+        "ime_picker_entry_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "open_picker",
+      "entry_points": [
+        "input_method_picker",
+        "retry"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [
+        "manual_steps"
+      ],
+      "manual_action_codes": [
+        "ANDROID_IME_NOT_SELECTED"
+      ]
+    },
+    {
+      "task_id": "android_verify_ime_enabled",
+      "phase": "recheck",
+      "title": "回检 Android 输入法启用状态",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_open_ime_settings"
+      ],
+      "success_criteria": [
+        "ime_enabled"
+      ],
+      "failure_codes": [
+        "ANDROID_IME_NOT_ENABLED"
+      ],
+      "outputs": [
+        "ime_enabled_recheck_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "settings_deep_link",
+        "retry"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_verify_ime_selected",
+      "phase": "recheck",
+      "title": "回检 Android 输入法选中状态",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_open_ime_picker"
+      ],
+      "success_criteria": [
+        "ime_selected"
+      ],
+      "failure_codes": [
+        "ANDROID_IME_NOT_SELECTED"
+      ],
+      "outputs": [
+        "ime_selected_recheck_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "input_method_picker",
+        "retry"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_configure_model",
+      "phase": "configure",
+      "title": "加载并校验配置模型",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_verify_carrier_installation",
+        "android_verify_rime_plugin_installation"
+      ],
+      "success_criteria": [
+        "config_model_loaded",
+        "config_model_validated"
+      ],
+      "failure_codes": [
+        "CONFIG_MODEL_VERSION_UNSUPPORTED",
+        "CONFIG_MODEL_SCHEMA_INVALID"
+      ],
+      "outputs": [
+        "validated_config_model"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "none",
+      "entry_points": [
+        "retry"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_generate_targets",
+      "phase": "generate",
+      "title": "生成 Android 目标包、应用清单与同步清单",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_configure_model"
+      ],
+      "success_criteria": [
+        "config_snapshot_created",
+        "generation_summary_created",
+        "sync_manifest_created",
+        "android_target_bundle_created",
+        "android_apply_manifest_created"
+      ],
+      "failure_codes": [
+        "CONFIG_SURFACE_INCOMPLETE",
+        "RESOURCE_MANIFEST_INVALID",
+        "FEATURE_PRESET_INVALID",
+        "TASK_MANIFEST_INVALID",
+        "SYNC_MANIFEST_INVALID",
+        "CONFIG_SNAPSHOT_INVALID",
+        "GENERATION_SUMMARY_INVALID",
+        "CONFIG_GENERATION_FAILED",
+        "ANDROID_APPLY_MANIFEST_INVALID",
+        "ANDROID_USER_DICT_EXPORT_FAILED"
+      ],
+      "outputs": [
+        "config_snapshot.json",
+        "generation_summary.json",
+        "sync_manifest.json",
+        "android_target_bundle",
+        "android_apply_manifest.json"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "none",
+      "entry_points": [
+        "retry"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [
+        "required_schema_id",
+        "keyboard_layout",
+        "manual_steps",
+        "recheck_items",
+        "delivery_mode"
+      ],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_backup_import_root",
+      "phase": "backup",
+      "title": "备份 Android 导入源目录与资源状态",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_generate_targets"
+      ],
+      "success_criteria": [
+        "backup_manifest_created",
+        "android_import_root_snapshot_created"
+      ],
+      "failure_codes": [
+        "BACKUP_FAILED"
+      ],
+      "outputs": [
+        "backup_manifest.json",
+        "backup_id"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "retry_execution",
+      "entry_points": [
+        "retry"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_apply_import_bundle",
+      "phase": "apply",
+      "title": "刷新 Android 导入源目录与应用清单",
+      "manual_required": false,
+      "mutates_target_state": true,
+      "rollback_supported": true,
+      "preconditions": [
+        "android_backup_import_root"
+      ],
+      "success_criteria": [
+        "android_import_bundle_written",
+        "android_apply_manifest_written"
+      ],
+      "failure_codes": [
+        "ANDROID_IMPORT_SOURCE_WRITE_FAILED"
+      ],
+      "outputs": [
+        "target_state_mutated",
+        "written_import_files"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "retry_execution",
+      "entry_points": [
+        "retry",
+        "rollback",
+        "directory_authorization"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [
+        "required_schema_id",
+        "manual_steps",
+        "recheck_items",
+        "delivery_mode"
+      ],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_deploy_carrier",
+      "phase": "deploy",
+      "title": "触发 Android 导入、设置引导与必要确认",
+      "manual_required": true,
+      "mutates_target_state": true,
+      "rollback_supported": true,
+      "preconditions": [
+        "android_apply_import_bundle"
+      ],
+      "success_criteria": [
+        "delivery_started",
+        "manual_steps_presented"
+      ],
+      "failure_codes": [
+        "ANDROID_DEPLOY_FAILED",
+        "ANDROID_PERMISSION_MISSING",
+        "ANDROID_IME_NOT_ENABLED",
+        "ANDROID_IME_NOT_SELECTED"
+      ],
+      "outputs": [
+        "delivery_mode",
+        "manual_steps"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "retry_execution",
+      "entry_points": [
+        "directory_authorization",
+        "settings_deep_link",
+        "input_method_picker",
+        "deploy_confirmation",
+        "retry",
+        "rollback"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [
+        "manual_steps",
+        "recheck_items",
+        "delivery_mode"
+      ],
+      "manual_action_codes": [
+        "ANDROID_PERMISSION_MISSING",
+        "ANDROID_IME_NOT_ENABLED",
+        "ANDROID_IME_NOT_SELECTED"
+      ]
+    },
+    {
+      "task_id": "android_recheck_runtime",
+      "phase": "recheck",
+      "title": "返回后回检运行态",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": true,
+      "preconditions": [
+        "android_deploy_carrier"
+      ],
+      "success_criteria": [
+        "required_schema_selected",
+        "keyboard_layout_applied",
+        "delivery_completed",
+        "runtime_matches_target_config"
+      ],
+      "failure_codes": [
+        "ANDROID_RECHECK_FAILED",
+        "STATE_MISMATCH"
+      ],
+      "outputs": [
+        "runtime_probe_result",
+        "recheck_summary"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "retry",
+        "rollback",
+        "settings_deep_link",
+        "input_method_picker",
+        "directory_authorization",
+        "deploy_confirmation"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_rollback_import_root",
+      "phase": "rollback",
+      "title": "按备份恢复 Android 导入源并重新进入导入闭环",
+      "manual_required": false,
+      "mutates_target_state": true,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_backup_import_root"
+      ],
+      "success_criteria": [
+        "backup_restored",
+        "reimport_ready"
+      ],
+      "failure_codes": [
+        "ROLLBACK_FAILED"
+      ],
+      "outputs": [
+        "rollback_result",
+        "restored_backup_id"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "retry_execution",
+      "entry_points": [
+        "rollback",
+        "deploy_confirmation"
+      ],
+      "recheck_after_return": true,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    },
+    {
+      "task_id": "android_diagnose_result",
+      "phase": "diagnose",
+      "title": "输出 Android 结构化诊断结果",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "android_detect_carrier_presence"
+      ],
+      "success_criteria": [
+        "diagnostic_report_created"
+      ],
+      "failure_codes": [
+        "STATE_MISMATCH"
+      ],
+      "outputs": [
+        "diagnostic_report.json"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "none",
+      "entry_points": [
+        "retry",
+        "rollback",
+        "settings_deep_link",
+        "input_method_picker",
+        "directory_authorization",
+        "deploy_confirmation"
+      ],
+      "recheck_after_return": false,
+      "apply_manifest_outputs": [],
+      "manual_action_codes": []
+    }
+  ]
+}

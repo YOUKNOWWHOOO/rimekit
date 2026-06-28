@@ -1,0 +1,607 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rimekit.local/shared/spec/config_model.schema.json",
+  "title": "RimeKitConfigModel",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "config_version",
+    "profile_settings",
+    "candidate_settings",
+    "behavior_settings",
+    "fuzzy_pinyin_settings",
+    "personalization_settings",
+    "dictionary_settings",
+    "model_settings",
+    "sync_settings",
+    "android_settings",
+    "windows_settings",
+    "pinyin_settings"
+  ],
+  "properties": {
+    "config_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "profile_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled_schema_ids",
+        "windows_default_schema_id",
+        "android_default_schema_id"
+      ],
+      "properties": {
+        "enabled_schema_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "windows_default_schema_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "android_default_schema_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "candidate_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layout",
+        "show_emoji_comments"
+      ],
+      "properties": {
+        "page_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "layout": {
+          "type": "string",
+          "enum": [
+            "vertical",
+            "horizontal"
+          ]
+        },
+        "show_emoji_comments": {
+          "type": "boolean"
+        }
+      }
+    },
+    "behavior_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "simplification_mode",
+        "full_shape_enabled",
+        "ascii_punct_enabled",
+        "emoji_suggestion_enabled",
+        "tone_display_enabled"
+      ],
+      "properties": {
+        "simplification_mode": {
+          "type": "string",
+          "enum": [
+            "simplified",
+            "traditional",
+            "opencc_switchable"
+          ]
+        },
+        "full_shape_enabled": {
+          "type": "boolean"
+        },
+        "ascii_punct_enabled": {
+          "type": "boolean"
+        },
+        "emoji_suggestion_enabled": {
+          "type": "boolean"
+        },
+        "tone_display_enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "fuzzy_pinyin_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "preset_id",
+        "target_schema_ids",
+        "additional_rules"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "preset_id": {
+          "type": "string"
+        },
+        "target_schema_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additional_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "enabled": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "preset_id": {
+                "const": ""
+              },
+              "additional_rules": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "personalization_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "symbol_profile_id",
+        "preedit_format_mode",
+        "custom_phrase_mode",
+        "comment_style_variant"
+      ],
+      "properties": {
+        "symbol_profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preedit_format_mode": {
+          "type": "string",
+          "enum": [
+            "upstream_default",
+            "raw_code",
+            "translated_code"
+          ]
+        },
+        "custom_phrase_mode": {
+          "type": "string",
+          "enum": [
+            "disabled",
+            "simple_code_only",
+            "full_phrase"
+          ]
+        },
+        "comment_style_variant": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "dictionary_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled_dictionary_ids",
+        "dictionary_order",
+        "custom_entries"
+      ],
+      "properties": {
+        "enabled_dictionary_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "dictionary_order": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "custom_entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "text",
+              "code",
+              "weight"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "code": {
+                "type": "string",
+                "minLength": 1
+              },
+              "weight": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "model_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled_model_ids",
+        "active_model_id",
+        "model_root",
+        "model_versions",
+        "contextual_suggestions_enabled",
+        "collocation_max_length",
+        "collocation_min_length",
+        "max_homophones",
+        "max_homographs"
+      ],
+      "properties": {
+        "enabled_model_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "active_model_id": {
+          "type": "string"
+        },
+        "model_root": {
+          "type": "string"
+        },
+        "model_versions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "contextual_suggestions_enabled": {
+          "type": "boolean"
+        },
+        "collocation_max_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "collocation_min_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_homophones": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_homographs": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "sync_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "android_import_root",
+        "windows_target_root",
+        "export_root",
+        "backup_root",
+        "snapshot_retention_limit"
+      ],
+      "properties": {
+        "android_import_root": {
+          "type": "string"
+        },
+        "windows_target_root": {
+          "type": "string"
+        },
+        "export_root": {
+          "type": "string"
+        },
+        "backup_root": {
+          "type": "string"
+        },
+        "snapshot_retention_limit": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "android_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "keyboard_layout",
+        "candidate_text_size",
+        "candidate_view_height"
+      ],
+      "properties": {
+        "keyboard_layout": {
+          "type": "string",
+          "const": "9_key"
+        },
+        "candidate_text_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "candidate_view_height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "windows_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "font_face",
+        "font_point",
+        "dpi_scale_mode",
+        "show_notification"
+      ],
+      "properties": {
+        "color_scheme": {
+          "type": "string"
+        },
+        "color_scheme_dark": {
+          "type": "string"
+        },
+        "font_face": {
+          "type": "string"
+        },
+        "font_point": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "label_font_face": {
+          "type": "string"
+        },
+        "label_font_point": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "comment_font_face": {
+          "type": "string"
+        },
+        "comment_font_point": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dpi_scale_mode": {
+          "type": "string",
+          "const": "per_monitor_v2"
+        },
+        "show_notification": {
+          "type": "boolean"
+        },
+        "notification_time_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "global_ascii": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "inline_preedit": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "preedit_type": {
+          "type": "string"
+        },
+        "fullscreen": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "vertical_text": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "vertical_text_left_to_right": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "vertical_text_with_wrap": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "vertical_auto_reverse": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "label_format": {
+          "type": "string"
+        },
+        "mark_text": {
+          "type": "string"
+        },
+        "ascii_tip_follow_cursor": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "enhanced_position": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "display_tray_icon": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "antialias_mode": {
+          "type": "string"
+        },
+        "candidate_abbreviate_length": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "paging_on_scroll": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "hover_type": {
+          "type": "string"
+        },
+        "click_to_capture": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "layout_baseline": {
+          "type": "integer"
+        },
+        "layout_linespacing": {
+          "type": "integer"
+        },
+        "layout_align_type": {
+          "type": "string"
+        },
+        "layout_max_height": {
+          "type": "integer"
+        },
+        "layout_max_width": {
+          "type": "integer"
+        },
+        "layout_min_height": {
+          "type": "integer"
+        },
+        "layout_min_width": {
+          "type": "integer"
+        },
+        "layout_border_width": {
+          "type": "integer"
+        },
+        "layout_margin_x": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_margin_y": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_spacing": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_candidate_spacing": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_hilite_spacing": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_hilite_padding": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_hilite_padding_x": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_hilite_padding_y": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_shadow_radius": {
+          "type": "integer"
+        },
+        "layout_shadow_offset_x": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_shadow_offset_y": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "layout_corner_radius": {
+          "type": "integer"
+        }
+      }
+    },
+    "pinyin_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ue_compat_enabled": {
+          "type": "boolean",
+          "description": "n/l后ue按ue解析"
+        }
+      }
+    }
+  }
+}

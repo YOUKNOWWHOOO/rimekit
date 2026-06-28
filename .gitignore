@@ -1,0 +1,88 @@
+# 系统级临时文件
+Thumbs.db
+.DS_Store
+
+# 测试输出与临时结果文件
+/apps/windows/RimeKit.Windows.Tests/test_results.log
+/apps/windows/RimeKit.Windows.Tests/scripts/results/
+/apps/windows/RimeKit.Windows.Tests/scripts/groups/results/
+
+# 发布 zip 产物
+rimekit-*.zip
+
+# 本地发布构建输出目录
+/publish/
+# 工作区运行时产物目录
+# 方案资源更新下载、词库更新缓存、承载器更新缓存、Trime 导入交付物、修复中间产物、验证证据导出物与交付物统一落在这些目录
+# Codex 生成的代码审查规约、审查过程记录和临时生成脚本也属于 /workspace/ 内的工作区运行时产物，不进入版本控制
+/workspace/
+/snapshots/
+/backups/
+/logs/
+/exports/
+/diagnostics/
+
+# Android 原生工程本地缓存与构建目录
+/apps/android/.gradle/
+/apps/android/.gradle-user-home/
+/apps/android/.android-user-home/
+/apps/android/.kotlin/
+/apps/android/.tmp/
+/apps/android/.idea/
+/apps/android/local.properties
+/apps/android/captures/
+/apps/android/**/*.iml
+/apps/android/**/build/
+
+# Windows /.NET 本地构建目录
+/apps/windows/.vs/
+/apps/windows/.dotnet_cli/
+/apps/windows/.idea/
+/apps/windows/**/bin/
+/apps/windows/**/obj/
+/apps/windows/**/*.tmp
+/apps/windows/**/*.trx
+/apps/windows/**/TestResults/
+/apps/windows/**/*.user
+/apps/windows/**/*.rsuser
+/apps/windows/**/*.suo
+/apps/windows/**/*.userosscache
+/apps/windows/**/*.sln.docstates
+
+# IDE 本地配置
+/.idea/
+/.vscode/
+
+# /exports/ 下的签名、安装包与构建分发产物
+/exports/**/*.apk
+/exports/**/*.ap_
+/exports/**/*.aab
+/exports/**/*.keystore
+/exports/**/*.jks
+/exports/**/*.pfx
+/exports/**/*.appx
+/exports/**/*.appxbundle
+/exports/**/*.msix
+/exports/**/*.msixbundle
+
+# 文档收敛阶段生成的派生 HTML 预览，不属于正式治理文档
+/docs/需求验证映射.html
+/docs/需求变更记录.html
+/docs/未定项记录.html
+
+# 只忽略正式运行时产物目录、平台工程本地缓存与 /exports/ 交付物
+# /tmp/ 用于临时下载和测试文件，不进入版本控制
+/tmp/
+# /docs/、/apps/、/shared/、/scripts/、README.md、CHANGELOG.md、.gitignore 等正式源码与治理资产不得通过忽略规则隐藏
+# docs/需求验证映射.md、docs/需求变更记录.md、docs/未定项记录.md 属于正式治理文档，必须进入版本控制
+# 需求验证证据、差异报告、人工确认留痕和回归分析默认落到工作区运行时产物目录，不得再新增平行根目录
+# 逐条需求验证证据固定收敛到 /diagnostics/doc-baseline/requirements/、/diagnostics/shared-contract/requirements/、/diagnostics/platform-implementation/android/requirements/、/diagnostics/platform-implementation/windows/requirements/、/diagnostics/end-to-end/requirements/、/diagnostics/manual-confirmation/requirements/、/diagnostics/repo-structure/requirements/
+# 单份验证证据文件名应遵循“测试验证项标识 + 正式要求引用 + 证据类型 + 时间戳”的固定命名口径；证据文件进入上述运行时目录，但对应索引仍必须回写 docs/ 正式治理文档
+# 根目录未定义的历史 /.tmp/、/.cache/ 等目录不属于固定的 /workspace/、/snapshots/、/backups/、/logs/、/exports/、/diagnostics/ 路径；如仍存在，只按遗留项处理，不新增对应兜底忽略规则
+# Android 工程目录内的 /.tmp/ 属于 apps/android/ 下的工程缓存路径；这条规则不延伸到仓库根目录
+# 文档收敛阶段生成的 /.tmp/md_audit* 只属于临时审计辅助路径，不属于固定的 /workspace/、/snapshots/、/backups/、/logs/、/exports/、/diagnostics/ 路径；需要时应人工清理，而不是靠忽略规则长期掩盖
+# 冻结确认输出、阻断提问结论和轮次留痕属于正式治理内容，只能回写 docs/ 正式文档，不得新增根目录临时说明文件再用忽略规则隐藏
+# 如果当前任务明确限定为“只改文档，不改代码”，历史工程或缓存也不得通过新增忽略规则被误报成“已完成清理”
+# 禁止用宽泛扩展名或宽泛目录规则掩盖正式资源文件、正式用户数据、测试夹具、文档样例或治理资产
+
+__pycache__/

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rimekit.local/shared/spec/config_snapshot.schema.json",
+  "title": "ConfigSnapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "snapshot_id",
+    "created_at",
+    "config_version",
+    "config_model",
+    "resolved_resources",
+    "resolved_feature_presets"
+  ],
+  "properties": {
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "config_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "config_model": {
+      "type": "object"
+    },
+    "resolved_resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "resource_id",
+          "resource_kind",
+          "source_class",
+          "version_or_updated_at"
+        ],
+        "properties": {
+          "resource_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resource_kind": {
+            "type": "string",
+            "enum": [
+              "schema",
+              "dictionary",
+              "model",
+              "template"
+            ]
+          },
+          "source_class": {
+            "type": "string",
+            "enum": [
+              "official_current",
+              "product_fixed_decision",
+              "product_specific_output"
+            ]
+          },
+          "version_or_updated_at": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "resolved_feature_presets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fuzzy_pinyin",
+        "symbol_profile",
+        "preedit_profile"
+      ],
+      "properties": {
+        "fuzzy_pinyin": {
+          "type": "string"
+        },
+        "symbol_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preedit_profile": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

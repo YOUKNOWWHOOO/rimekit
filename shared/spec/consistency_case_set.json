@@ -1,0 +1,446 @@
+{
+  "case_set_version": 1,
+  "cases": [
+    {
+      "case_id": "baseline_default_profile",
+      "title": "默认方案与平台默认值",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {}
+      },
+      "expected_shared_outputs": {
+        "enabled_schema_ids": [
+          "rime_mint",
+          "t9"
+        ],
+        "windows_default_schema_id": "rime_mint",
+        "android_default_schema_id": "t9"
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "required_schema_id": "t9"
+        },
+        "windows": {
+          "required_schema_id": "rime_mint"
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "default.custom.yaml"
+        ],
+        "summary_fields": [
+          "generated_files_by_platform",
+          "shared_output_summary"
+        ],
+        "sync_fields": [
+          "success_criteria.config_model"
+        ]
+      }
+    },
+    {
+      "case_id": "candidate_layout_horizontal",
+      "title": "候选区横排",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "candidate_settings": {
+            "layout": "horizontal",
+            "show_emoji_comments": true
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "candidate_layout": "horizontal"
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "t9_candidate_layout": "horizontal"
+        },
+        "windows": {
+          "weasel_candidate_layout": "horizontal"
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "rime_mint.custom.yaml"
+        ],
+        "summary_fields": [
+          "shared_output_summary.candidate"
+        ],
+        "sync_fields": [
+          "consistency_hashes"
+        ]
+      }
+    },
+    {
+      "case_id": "behavior_switches_enabled",
+      "title": "行为开关组合",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "behavior_settings": {
+            "simplification_mode": "opencc_switchable",
+            "full_shape_enabled": true,
+            "ascii_punct_enabled": true,
+            "emoji_suggestion_enabled": false,
+            "tone_display_enabled": false
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "simplification_mode": "opencc_switchable",
+        "full_shape_enabled": true,
+        "ascii_punct_enabled": true
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "target_file": "t9.custom.yaml"
+        },
+        "windows": {
+          "target_file": "rime_mint.custom.yaml"
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "rime_mint.custom.yaml"
+        ],
+        "summary_fields": [
+          "shared_output_summary.behavior"
+        ],
+        "sync_fields": [
+          "success_criteria.target_config"
+        ]
+      }
+    },
+    {
+      "case_id": "fuzzy_for_rime_mint_only",
+      "title": "模糊拼音仅作用于薄荷主方案",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "fuzzy_pinyin_settings": {
+            "enabled": true,
+            "preset_id": "cn_common",
+            "target_schema_ids": [
+              "rime_mint"
+            ],
+            "additional_rules": []
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "fuzzy_targets": [
+          "rime_mint"
+        ]
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "t9_has_fuzzy_output": false
+        },
+        "windows": {
+          "rime_mint_has_fuzzy_output": true
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "rime_mint.custom.yaml"
+        ],
+        "summary_fields": [
+          "shared_output_summary.fuzzy_pinyin"
+        ],
+        "sync_fields": [
+          "consistency_hashes"
+        ]
+      }
+    },
+    {
+      "case_id": "fuzzy_for_both_schemas",
+      "title": "模糊拼音同时作用于薄荷主方案与九键方案",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "fuzzy_pinyin_settings": {
+            "enabled": true,
+            "preset_id": "cn_common",
+            "target_schema_ids": [
+              "rime_mint",
+              "t9"
+            ],
+            "additional_rules": []
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "fuzzy_targets": [
+          "rime_mint",
+          "t9"
+        ]
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "t9_has_fuzzy_output": true
+        },
+        "windows": {
+          "rime_mint_has_fuzzy_output": true
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "rime_mint.custom.yaml"
+        ],
+        "summary_fields": [
+          "shared_output_summary.fuzzy_pinyin"
+        ],
+        "sync_fields": [
+          "consistency_hashes"
+        ]
+      }
+    },
+    {
+      "case_id": "personalization_variant",
+      "title": "预编辑与补充显示配置",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "personalization_settings": {
+            "symbol_profile_id": "default",
+            "preedit_format_mode": "raw_code",
+            "custom_phrase_mode": "full_phrase",
+            "comment_style_variant": "default"
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "preedit_format_mode": "raw_code",
+        "custom_phrase_mode": "full_phrase"
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "target_file": "t9.custom.yaml"
+        },
+        "windows": {
+          "target_file": "rime_mint.custom.yaml"
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "rime_mint.custom.yaml"
+        ],
+        "summary_fields": [
+          "shared_output_summary.personalization"
+        ],
+        "sync_fields": [
+          "success_criteria.target_config"
+        ]
+      }
+    },
+    {
+      "case_id": "dictionary_order_with_custom_entries",
+      "title": "词库顺序与自定义词条",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "dictionary_settings": {
+            "enabled_dictionary_ids": [
+              "sogou_network_popular_words",
+              "custom_simple",
+              "moetype"
+            ],
+            "dictionary_order": [
+              "sogou_network_popular_words",
+              "custom_simple",
+              "moetype"
+            ],
+            "custom_entries": [
+              {
+                "text": "薄荷输入法",
+                "code": "bhsr",
+                "weight": 1000
+              }
+            ]
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "import_tables": [
+          "sogou_network_popular_words",
+          "custom_simple",
+          "moetype"
+        ]
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "custom_simple_generated": true
+        },
+        "windows": {
+          "custom_simple_generated": true
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "rime_mint.custom.dict.yaml",
+          "dicts/custom_simple.dict.yaml"
+        ],
+        "summary_fields": [
+          "shared_output_summary.dictionary"
+        ],
+        "sync_fields": [
+          "user_data_payloads"
+        ]
+      }
+    },
+    {
+      "case_id": "model_tuning_enabled",
+      "title": "模型调优输出摘要",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "model_settings": {
+            "enabled_model_ids": [],
+            "active_model_id": "",
+            "model_root": "",
+            "model_versions": {},
+            "contextual_suggestions_enabled": true,
+            "collocation_max_length": 4,
+            "collocation_min_length": 2,
+            "max_homophones": 6,
+            "max_homographs": 4
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "contextual_suggestions_enabled": true,
+        "collocation_max_length": 4
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "target_file": "t9.custom.yaml"
+        },
+        "windows": {
+          "target_file": "rime_mint.custom.yaml"
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "rime_mint.custom.yaml"
+        ],
+        "summary_fields": [
+          "shared_output_summary.model_tuning"
+        ],
+        "sync_fields": [
+          "consistency_hashes"
+        ]
+      }
+    },
+    {
+      "case_id": "android_layout_manifest_contract",
+      "title": "Android 中文 9 键应用清单",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "android_settings": {
+            "keyboard_layout": "9_key",
+            "candidate_text_size": 24,
+            "candidate_view_height": 36
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "android_keyboard_layout": "9_key"
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "required_schema_id": "t9",
+          "keyboard_layout": "9_key"
+        },
+        "windows": {
+          "readonly_only": true
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "android_apply_manifest.json"
+        ],
+        "summary_fields": [
+          "generated_files_by_platform"
+        ],
+        "sync_fields": [
+          "platform_targets.android"
+        ]
+      }
+    },
+    {
+      "case_id": "windows_display_contract",
+      "title": "Windows 显示项契约",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {
+          "windows_settings": {
+            "font_face": "Microsoft YaHei",
+            "font_point": 10,
+            "dpi_scale_mode": "per_monitor_v2",
+            "show_notification": false
+          }
+        }
+      },
+      "expected_shared_outputs": {
+        "candidate_layout_source": "$.candidate_settings.layout"
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "readonly_only": true
+        },
+        "windows": {
+          "font_face": "Microsoft YaHei",
+          "show_notification": true
+        }
+      },
+      "comparison_scope": {
+        "target_files": [
+          "weasel.custom.yaml"
+        ],
+        "summary_fields": [
+          "generated_files_by_platform"
+        ],
+        "sync_fields": [
+          "platform_targets.windows"
+        ]
+      }
+    },
+    {
+      "case_id": "sync_success_contract",
+      "title": "同步成功判定闭环",
+      "input_config": {
+        "base_profile_id": "rimekit_default",
+        "overrides": {}
+      },
+      "expected_shared_outputs": {
+        "success_criteria_required": [
+          "config_model",
+          "formal_resource",
+          "user_data",
+          "target_config",
+          "runtime_state"
+        ]
+      },
+      "platform_specific_expectations": {
+        "android": {
+          "requires_recheck": true
+        },
+        "windows": {
+          "requires_recheck": true
+        }
+      },
+      "comparison_scope": {
+        "target_files": [],
+        "summary_fields": [
+          "shared_output_summary"
+        ],
+        "sync_fields": [
+          "success_criteria",
+          "consistency_hashes"
+        ]
+      }
+    }
+  ]
+}

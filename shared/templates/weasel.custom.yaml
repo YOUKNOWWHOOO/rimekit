@@ -1,0 +1,5 @@
+patch:
+  style/font_face: "__WINDOWS_FONT_FACE__"
+  style/font_point: "__WINDOWS_FONT_POINT__"
+  style/layout/type: "__CANDIDATE_LAYOUT__"
+  show_notifications: "__SHOW_NOTIFICATIONS__"

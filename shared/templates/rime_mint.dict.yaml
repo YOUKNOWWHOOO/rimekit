@@ -1,0 +1,16 @@
+---
+name: rime_mint                  # 注意name和文件名一致
+version: "__DICT_VERSION__"
+sort: by_weight
+use_preset_vocabulary: false
+import_tables:
+  - "custom_simple"
+  - "dicts/rime_mint.chars"
+  - "dicts/rime_mint.base"
+  - "dicts/rime_mint.correlation"
+  - "dicts/rime_mint.compatible"
+  - "dicts/rime_mint.ext"
+  - "dicts/other_kaomoji"
+  - "dicts/rime_ice.others"
+  - "moetype"
+  - "sogou_network_popular_words"

@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rimekit.local/shared/spec/diagnostic_report.schema.json",
+  "title": "DiagnosticReport",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "platform",
+    "phase",
+    "status",
+    "findings",
+    "next_action",
+    "snapshot_id",
+    "target_state_mutated",
+    "rollback_available",
+    "rollback_recommended",
+    "display_kind",
+    "entry_points"
+  ],
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": [
+        "android",
+        "windows",
+        "shared",
+        "cross_platform"
+      ]
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "detect",
+        "configure",
+        "generate",
+        "backup",
+        "apply",
+        "deploy",
+        "recheck",
+        "rollback",
+        "diagnose"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "manual_action_required",
+        "blocked",
+        "failed",
+        "completed"
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "severity",
+          "summary",
+          "detail",
+          "display_kind",
+          "auto_action_kind",
+          "entry_point_kind"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "info",
+              "warning",
+              "blocking",
+              "fatal"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 1
+          },
+          "display_kind": {
+            "type": "string",
+            "enum": [
+              "explicit_warning",
+              "explicit_error",
+              "explicit_prompt"
+            ]
+          },
+          "auto_action_kind": {
+            "type": "string",
+            "enum": [
+              "none",
+              "detect_only",
+              "install_request",
+              "reinstall_request",
+              "repair_check",
+              "open_settings",
+              "open_picker",
+              "open_directory",
+              "open_logs",
+              "retry_execution"
+            ]
+          },
+          "entry_point_kind": {
+            "type": "string",
+            "enum": [
+              "none",
+              "install_url",
+              "installer_launch",
+              "settings_deep_link",
+              "input_method_picker",
+              "directory_authorization",
+              "deploy_confirmation",
+              "directory_open",
+              "logs_open",
+              "retry",
+              "rollback"
+            ]
+          },
+          "backup_id": {
+            "type": "string"
+          },
+          "conflict_scope": {
+            "type": "string",
+            "enum": [
+              "config_model",
+              "formal_resource",
+              "target_config",
+              "runtime_state"
+            ]
+          },
+          "related_task_id": {
+            "type": "string"
+          },
+          "log_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "next_action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "backup_id": {
+      "type": "string"
+    },
+    "target_state_mutated": {
+      "type": "boolean"
+    },
+    "rollback_available": {
+      "type": "boolean"
+    },
+    "rollback_recommended": {
+      "type": "boolean"
+    },
+    "display_kind": {
+      "type": "string",
+      "enum": [
+        "explicit_warning",
+        "explicit_error",
+        "explicit_prompt",
+        "none"
+      ]
+    },
+    "entry_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "label"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "install_url",
+              "installer_launch",
+              "settings_deep_link",
+              "input_method_picker",
+              "directory_authorization",
+              "deploy_confirmation",
+              "directory_open",
+              "logs_open",
+              "retry",
+              "rollback"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

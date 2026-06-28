@@ -1,0 +1,87 @@
+[
+  {
+    "action_id": "gui_detect_carrier_status",
+    "page": "承载器",
+    "trigger_kind": "gui_click",
+    "steps": [
+      { "kind": "select_top_tab", "page": "承载器" },
+      { "kind": "click_button", "control_name": "BtnCarrierDetect" }
+    ],
+    "wait_for": { "kind": "diagnostic_exists", "path": "workspace/windows/state/last_diagnostic.json", "timeout_ms": 10000 },
+    "assert": { "kind": "json_property_equals", "path": "workspace/windows/state/last_diagnostic.json", "property": "phase", "value": "detect" }
+  },
+  {
+    "action_id": "gui_detect_scheme_status",
+    "page": "输入方案",
+    "trigger_kind": "gui_click",
+    "steps": [
+      { "kind": "select_top_tab", "page": "输入方案" },
+      { "kind": "click_button", "control_name": "Btn_检测输入方案状态" }
+    ],
+    "wait_for": { "kind": "diagnostic_exists", "path": "workspace/windows/state/last_diagnostic.json", "timeout_ms": 10000 },
+    "assert": { "kind": "json_property_equals", "path": "workspace/windows/state/last_diagnostic.json", "property": "phase", "value": "detect" }
+  },
+  {
+    "action_id": "gui_detect_dictionary_status",
+    "page": "词库",
+    "trigger_kind": "gui_click",
+    "steps": [
+      { "kind": "select_top_tab", "page": "词库" },
+      { "kind": "click_button", "control_name": "Btn_检测本地词库" }
+    ],
+    "wait_for": { "kind": "diagnostic_exists", "path": "workspace/windows/state/last_diagnostic.json", "timeout_ms": 10000 },
+    "assert": { "kind": "json_property_equals", "path": "workspace/windows/state/last_diagnostic.json", "property": "phase", "value": "detect" }
+  },
+  {
+    "action_id": "gui_detect_model_status",
+    "page": "语法模型",
+    "trigger_kind": "gui_click",
+    "steps": [
+      { "kind": "select_top_tab", "page": "语法模型" },
+      { "kind": "click_button", "control_name": "Btn_检测本地语法模型" }
+    ],
+    "wait_for": { "kind": "diagnostic_exists", "path": "workspace/windows/state/last_diagnostic.json", "timeout_ms": 15000 },
+    "assert": { "kind": "json_property_equals", "path": "workspace/windows/state/last_diagnostic.json", "property": "phase", "value": "detect" }
+  },
+  {
+    "action_id": "cli_list_custom_entries",
+    "page": "backend",
+    "trigger_kind": "cli_command",
+    "command": "list-custom-entries",
+    "arguments": ["--config", "workspace/windows/state/current_config_model.json"]
+  },
+  {
+    "action_id": "cli_doctor",
+    "page": "backend",
+    "trigger_kind": "cli_command",
+    "command": "doctor",
+    "arguments": ["--config", "workspace/windows/state/current_config_model.json"]
+  },
+  {
+    "action_id": "cli_resource_status",
+    "page": "backend",
+    "trigger_kind": "cli_command",
+    "command": "resource-status",
+    "arguments": ["--format", "json"]
+  },
+  {
+    "action_id": "check_installed_resources",
+    "page": "backend",
+    "trigger_kind": "check_file",
+    "target": "workspace/windows/state/installed_resources.json"
+  },
+  {
+    "action_id": "validate_recheck_summary",
+    "page": "backend",
+    "trigger_kind": "validate_json",
+    "target": "workspace/windows/state/last_recheck_summary.json",
+    "assert": { "kind": "json_property_equals", "property": "status", "value": "completed" }
+  },
+  {
+    "action_id": "validate_diagnostic",
+    "page": "backend",
+    "trigger_kind": "validate_json",
+    "target": "workspace/windows/state/last_diagnostic.json",
+    "assert": { "kind": "json_property_equals", "property": "phase", "value": "detect" }
+  }
+]

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rimekit.local/shared/spec/android_apply_manifest.schema.json",
+  "title": "AndroidApplyManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "platform",
+    "carrier_id",
+    "required_schema_id",
+    "keyboard_layout",
+    "candidate_text_size",
+    "candidate_view_height",
+    "manual_steps",
+    "recheck_items",
+    "delivery_mode"
+  ],
+  "properties": {
+    "platform": {
+      "type": "string",
+      "const": "android"
+    },
+    "carrier_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "required_schema_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "keyboard_layout": {
+      "type": "string",
+      "const": "9_key"
+    },
+    "candidate_text_size": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "candidate_view_height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "manual_steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "step_id",
+          "title",
+          "next_action"
+        ],
+        "properties": {
+          "step_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "next_action": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "recheck_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "delivery_mode": {
+      "type": "string",
+      "enum": [
+        "import_root_refresh",
+        "import_and_manual_confirm"
+      ]
+    }
+  }
+}

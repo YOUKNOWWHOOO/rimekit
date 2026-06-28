@@ -1,0 +1,78 @@
+{
+  "profile_id": "rimekit_default",
+  "config_version": 1,
+  "platform_defaults": {
+    "shared_enabled_schema_ids": [
+      "rime_mint",
+      "t9"
+    ],
+    "windows_default_schema_id": "rime_mint",
+    "android_default_schema_id": "t9",
+    "android_keyboard_layout": "9_key",
+    "windows_dpi_scale_mode": "per_monitor_v2",
+    "windows_show_notification": false
+  },
+  "default_feature_presets": {
+    "fuzzy_pinyin_preset_id": "",
+    "symbol_profile_id": "default",
+    "preedit_profile_id": "upstream_default",
+    "comment_style_variant": "default"
+  },
+  "runtime_baseline": {
+    "android": {
+      "carrier_id": "fcitx5_android_rime",
+      "required_schema_id": "t9",
+      "keyboard_layout": "9_key",
+      "recheck_items": [
+        "carrier_available",
+        "rime_plugin_available",
+        "android_import_root_authorized",
+        "required_schema_selected",
+        "keyboard_layout_applied",
+        "t9_delivery_completed"
+      ]
+    },
+    "windows": {
+      "carrier_id": "weasel",
+      "required_schema_id": "rime_mint",
+      "dpi_scale_mode": "per_monitor_v2",
+      "recheck_items": [
+        "weasel_available",
+        "target_files_written",
+        "deployer_completed",
+        "font_resolved",
+        "candidate_layout_applied"
+      ]
+    }
+  },
+  "generation_hints": {
+    "value_priority": [
+      "config_model",
+      "setup_profile",
+      "feature_preset",
+      "template_placeholder",
+      "upstream_template"
+    ],
+    "common_template_files": [
+      "default.custom.yaml",
+      "rime_mint.custom.yaml",
+      "rime_mint.custom.dict.yaml",
+      "dicts/custom_simple.dict.yaml"
+    ],
+    "platform_specific_template_files": {
+      "android": [
+        "t9.custom.yaml",
+        "android_apply_manifest.json"
+      ],
+      "windows": [
+        "weasel.custom.yaml"
+      ]
+    }
+  },
+  "retention_defaults": {
+    "snapshot_retention_limit": 20,
+    "keep_latest_successful_snapshot": true,
+    "keep_latest_successful_backup": true,
+    "keep_latest_diagnostic_reference": true
+  }
+}

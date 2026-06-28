@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rimekit.local/shared/spec/generation_summary.schema.json",
+  "title": "GenerationSummary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "snapshot_id",
+    "config_version",
+    "resource_versions",
+    "resolved_defaults",
+    "resolved_feature_presets",
+    "generated_files_by_platform",
+    "shared_output_summary"
+  ],
+  "properties": {
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "config_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "resource_versions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "resolved_defaults": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "resolved_feature_presets": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "generated_files_by_platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "android",
+        "windows"
+      ],
+      "properties": {
+        "android": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "windows": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "shared_output_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate",
+        "behavior",
+        "fuzzy_pinyin",
+        "personalization",
+        "dictionary",
+        "model_tuning"
+      ],
+      "properties": {
+        "candidate": {
+          "type": "object"
+        },
+        "behavior": {
+          "type": "object"
+        },
+        "fuzzy_pinyin": {
+          "type": "object"
+        },
+        "personalization": {
+          "type": "object"
+        },
+        "dictionary": {
+          "type": "object"
+        },
+        "model_tuning": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

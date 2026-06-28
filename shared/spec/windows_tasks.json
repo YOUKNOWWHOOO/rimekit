@@ -1,0 +1,483 @@
+{
+  "manifest_version": 1,
+  "platform": "windows",
+  "tasks": [
+    {
+      "task_id": "windows_detect_weasel_presence",
+      "phase": "detect",
+      "title": "检测 Weasel 是否存在",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [],
+      "success_criteria": [
+        "weasel_present",
+        "deployer_present"
+      ],
+      "failure_codes": [
+        "WINDOWS_WEASEL_MISSING"
+      ],
+      "outputs": [
+        "carrier_probe_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "install_url",
+        "installer_launch",
+        "retry"
+      ]
+    },
+    {
+      "task_id": "windows_download_weasel_installer",
+      "phase": "detect",
+      "title": "检查或发起 Weasel 安装器下载",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [],
+      "success_criteria": [
+        "installer_download_checked"
+      ],
+      "failure_codes": [
+        "WINDOWS_WEASEL_DOWNLOAD_FAILED"
+      ],
+      "outputs": [
+        "installer_download_result"
+      ],
+      "message_kind": "explicit_warning",
+      "auto_action_kind": "install_request",
+      "entry_points": [
+        "install_url",
+        "retry"
+      ]
+    },
+    {
+      "task_id": "windows_launch_weasel_installer",
+      "phase": "detect",
+      "title": "启动 Weasel 安装器",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_download_weasel_installer"
+      ],
+      "success_criteria": [
+        "installer_process_started"
+      ],
+      "failure_codes": [
+        "WINDOWS_WEASEL_INSTALL_LAUNCH_FAILED"
+      ],
+      "outputs": [
+        "installer_launch_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "install_request",
+      "entry_points": [
+        "installer_launch",
+        "retry"
+      ]
+    },
+    {
+      "task_id": "windows_verify_weasel_installation",
+      "phase": "recheck",
+      "title": "安装后回检 Weasel",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_launch_weasel_installer"
+      ],
+      "success_criteria": [
+        "weasel_present",
+        "deployer_present",
+        "install_path_valid"
+      ],
+      "failure_codes": [
+        "WINDOWS_WEASEL_INSTALL_RECHECK_FAILED"
+      ],
+      "outputs": [
+        "installer_recheck_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "retry",
+        "installer_launch",
+        "install_url"
+      ]
+    },
+    {
+      "task_id": "windows_check_deployer_health",
+      "phase": "detect",
+      "title": "检查部署器健康状态",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_detect_weasel_presence"
+      ],
+      "success_criteria": [
+        "deployer_present",
+        "deployer_invokable"
+      ],
+      "failure_codes": [
+        "WINDOWS_DEPLOYER_MISSING",
+        "WINDOWS_DEPLOYER_REPAIR_FAILED"
+      ],
+      "outputs": [
+        "deployer_health_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "repair_check",
+      "entry_points": [
+        "logs_open",
+        "retry",
+        "installer_launch"
+      ]
+    },
+    {
+      "task_id": "windows_request_weasel_reinstall",
+      "phase": "detect",
+      "title": "请求重新安装 Weasel",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_verify_weasel_installation"
+      ],
+      "success_criteria": [
+        "reinstall_path_confirmed"
+      ],
+      "failure_codes": [
+        "WINDOWS_WEASEL_REINSTALL_REQUIRED"
+      ],
+      "outputs": [
+        "reinstall_request_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "reinstall_request",
+      "entry_points": [
+        "installer_launch",
+        "install_url",
+        "logs_open"
+      ]
+    },
+    {
+      "task_id": "windows_launch_weasel_uninstaller",
+      "phase": "detect",
+      "title": "启动 Weasel 卸载入口",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_detect_weasel_presence"
+      ],
+      "success_criteria": [
+        "uninstall_entry_launched"
+      ],
+      "failure_codes": [
+        "WINDOWS_WEASEL_UNINSTALL_LAUNCH_FAILED"
+      ],
+      "outputs": [
+        "uninstall_launch_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "reinstall_request",
+      "entry_points": [
+        "uninstall_launch",
+        "retry"
+      ]
+    },
+    {
+      "task_id": "windows_open_target_root",
+      "phase": "detect",
+      "title": "打开 Windows 目标目录",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_detect_weasel_presence"
+      ],
+      "success_criteria": [
+        "target_root_opened"
+      ],
+      "failure_codes": [
+        "WINDOWS_TARGET_ROOT_INVALID"
+      ],
+      "outputs": [
+        "target_root_entry_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "open_directory",
+      "entry_points": [
+        "directory_open"
+      ]
+    },
+    {
+      "task_id": "windows_configure_model",
+      "phase": "configure",
+      "title": "加载并校验配置模型",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_detect_weasel_presence"
+      ],
+      "success_criteria": [
+        "config_model_loaded",
+        "config_model_validated"
+      ],
+      "failure_codes": [
+        "CONFIG_MODEL_VERSION_UNSUPPORTED",
+        "CONFIG_MODEL_SCHEMA_INVALID"
+      ],
+      "outputs": [
+        "validated_config_model"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "none",
+      "entry_points": [
+        "retry"
+      ]
+    },
+    {
+      "task_id": "windows_generate_targets",
+      "phase": "generate",
+      "title": "生成 Windows 目标包、快照与同步清单",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_configure_model"
+      ],
+      "success_criteria": [
+        "config_snapshot_created",
+        "generation_summary_created",
+        "sync_manifest_created",
+        "windows_target_bundle_created"
+      ],
+      "failure_codes": [
+        "CONFIG_SURFACE_INCOMPLETE",
+        "RESOURCE_MANIFEST_INVALID",
+        "FEATURE_PRESET_INVALID",
+        "TASK_MANIFEST_INVALID",
+        "SYNC_MANIFEST_INVALID",
+        "CONFIG_SNAPSHOT_INVALID",
+        "GENERATION_SUMMARY_INVALID",
+        "CONFIG_GENERATION_FAILED",
+        "WINDOWS_USER_DICT_EXPORT_FAILED"
+      ],
+      "outputs": [
+        "config_snapshot.json",
+        "generation_summary.json",
+        "sync_manifest.json",
+        "windows_target_bundle"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "none",
+      "entry_points": [
+        "retry"
+      ]
+    },
+    {
+      "task_id": "windows_backup_target_root",
+      "phase": "backup",
+      "title": "备份 Windows 目标目录与资源状态",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_generate_targets"
+      ],
+      "success_criteria": [
+        "backup_manifest_created",
+        "windows_target_root_snapshot_created"
+      ],
+      "failure_codes": [
+        "BACKUP_FAILED"
+      ],
+      "outputs": [
+        "backup_manifest.json",
+        "backup_id"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "retry_execution",
+      "entry_points": [
+        "retry"
+      ]
+    },
+    {
+      "task_id": "windows_apply_target_bundle",
+      "phase": "apply",
+      "title": "写入 Windows 目标目录",
+      "manual_required": false,
+      "mutates_target_state": true,
+      "rollback_supported": true,
+      "preconditions": [
+        "windows_backup_target_root"
+      ],
+      "success_criteria": [
+        "windows_target_bundle_written"
+      ],
+      "failure_codes": [
+        "WINDOWS_APPLY_FAILED"
+      ],
+      "outputs": [
+        "target_state_mutated",
+        "written_target_files"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "retry_execution",
+      "entry_points": [
+        "retry",
+        "rollback",
+        "directory_open"
+      ]
+    },
+    {
+      "task_id": "windows_deploy_carrier",
+      "phase": "deploy",
+      "title": "触发 Weasel 部署器",
+      "manual_required": false,
+      "mutates_target_state": true,
+      "rollback_supported": true,
+      "preconditions": [
+        "windows_apply_target_bundle"
+      ],
+      "success_criteria": [
+        "deployer_completed"
+      ],
+      "failure_codes": [
+        "WINDOWS_DEPLOY_FAILED"
+      ],
+      "outputs": [
+        "deployer_log_ref",
+        "deploy_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "retry_execution",
+      "entry_points": [
+        "retry",
+        "rollback",
+        "logs_open"
+      ]
+    },
+    {
+      "task_id": "windows_recheck_runtime",
+      "phase": "recheck",
+      "title": "回检运行态并收集日志",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": true,
+      "preconditions": [
+        "windows_deploy_carrier"
+      ],
+      "success_criteria": [
+        "runtime_matches_config_model",
+        "runtime_matches_target_config"
+      ],
+      "failure_codes": [
+        "WINDOWS_RECHECK_FAILED",
+        "WINDOWS_FONT_MISSING",
+        "WINDOWS_DPI_STATE_INVALID",
+        "STATE_MISMATCH"
+      ],
+      "outputs": [
+        "runtime_probe_result",
+        "log_collection_result"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "detect_only",
+      "entry_points": [
+        "retry",
+        "rollback",
+        "logs_open",
+        "directory_open"
+      ]
+    },
+    {
+      "task_id": "windows_rollback_target_root",
+      "phase": "rollback",
+      "title": "按备份恢复 Windows 目标目录并重新部署",
+      "manual_required": false,
+      "mutates_target_state": true,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_backup_target_root"
+      ],
+      "success_criteria": [
+        "backup_restored",
+        "deployer_completed_after_rollback"
+      ],
+      "failure_codes": [
+        "ROLLBACK_FAILED",
+        "WINDOWS_DEPLOY_FAILED"
+      ],
+      "outputs": [
+        "rollback_result",
+        "restored_backup_id"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "retry_execution",
+      "entry_points": [
+        "rollback",
+        "logs_open"
+      ]
+    },
+    {
+      "task_id": "windows_open_logs_root",
+      "phase": "diagnose",
+      "title": "打开 Windows 日志目录",
+      "manual_required": true,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_recheck_runtime"
+      ],
+      "success_criteria": [
+        "logs_root_opened"
+      ],
+      "failure_codes": [
+        "WINDOWS_DEPLOY_FAILED",
+        "WINDOWS_DEPLOYER_REPAIR_FAILED",
+        "WINDOWS_RECHECK_FAILED"
+      ],
+      "outputs": [
+        "logs_root_entry_result"
+      ],
+      "message_kind": "explicit_prompt",
+      "auto_action_kind": "open_logs",
+      "entry_points": [
+        "logs_open"
+      ]
+    },
+    {
+      "task_id": "windows_diagnose_result",
+      "phase": "diagnose",
+      "title": "输出 Windows 结构化诊断结果",
+      "manual_required": false,
+      "mutates_target_state": false,
+      "rollback_supported": false,
+      "preconditions": [
+        "windows_detect_weasel_presence"
+      ],
+      "success_criteria": [
+        "diagnostic_report_created"
+      ],
+      "failure_codes": [
+        "STATE_MISMATCH"
+      ],
+      "outputs": [
+        "diagnostic_report.json"
+      ],
+      "message_kind": "explicit_error",
+      "auto_action_kind": "none",
+      "entry_points": [
+        "retry",
+        "rollback",
+        "logs_open"
+      ]
+    }
+  ]
+}
