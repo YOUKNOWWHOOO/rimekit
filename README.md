@@ -44,26 +44,26 @@
 如果软件自带的下载功能遇到网络问题，你也可以手动下载文件后，通过各页面的「从文件安装」按钮来安装。
 
 ### 小狼毫安装器
-- **下载地址**：https://github.com/rime/weasel/releases（选择最新版 `.exe` 安装包）
-- **文件类型**：`.exe`
+- **下载地址**：https://github.com/rime/weasel/releases
+- **选择哪个文件**：找到最新版本（Latest），下载 `Weasel-x.x.x.x-installer.exe`（文件名中的版本号随更新变化）
 - **操作方法**：承载器页 → 从文件安装 → 选择下载好的 `.exe` 文件
 
 ### 输入方案
-- **下载地址**：https://github.com/Mintimate/oh-my-rime（Code → Download ZIP）
-- **文件类型**：`.zip`
+- **下载地址**：https://github.com/Mintimate/oh-my-rime
+- **选择哪个文件**：点绿色的「Code」按钮 → Download ZIP，得到 `oh-my-rime-main.zip`
 - **操作方法**：输入方案页 → 从文件安装 → 选择下载好的 `.zip` 文件
 
 ### 词库
-| 词库 | 下载地址 | 下载方式 |
-|------|---------|---------|
-| moetype ACG 词库 | https://github.com/suiginko/moetype | 进入页面 → 点绿色的「Code」按钮 → Download ZIP |
-| 搜狗网络流行新词 | https://pinyin.sogou.com/dict/detail/index/4 | 进入页面 → 点击「下载」按钮，会得到一个 `.scel` 文件 |
-| zhwiki 百科词库 | **建议使用软件自带的「下载并安装」功能**（通过 GitHub API 自动获取最新版） |
-- **操作方法**：词库页 → 选中对应的词库 → 从文件安装 → 选择下载好的文件。zhwiki 词库的 Release 中仅提供 `.dict` 格式文件，不支持手动从文件安装，请使用软件自带的在线安装。
+| 词库 | 下载地址 | 选择哪个文件 |
+|------|---------|-------------|
+| moetype ACG 词库 | https://github.com/suiginko/moetype | 点击 `tone_moe.dict.yaml` 文件 → 点 Raw 下载；或点 Code → Download ZIP 下载整个仓库 |
+| 搜狗网络流行新词 | https://pinyin.sogou.com/dict/detail/index/4 | 点击「下载」按钮，得到 `搜狗网络流行新词.scel` |
+| zhwiki 百科词库 | https://github.com/felixonmars/fcitx5-pinyin-zhwiki/releases | 找最新版 Release，下载 `zhwiki-YYYYMMDD.dict.yaml`（日期戳随版本变化），约 54MB |
+- **操作方法**：词库页 → 选中对应的词库 → 从文件安装 → 选择下载好的文件
 
 ### 语法模型
 - **下载地址**：https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram
-- **文件类型**：`.gram`
+- **文件类型**：`.gram`，约 420MB
 - **操作方法**：语法模型页 → 从文件安装 → 选择下载好的 `.gram` 文件
 
 ## 系统要求
