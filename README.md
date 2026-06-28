@@ -26,6 +26,9 @@
 - 没有 Android 版本（开发中）
 - 没有 Windows 和 Android 之间的同步功能（计划中）
 
+## 软件截图
+![alt text](images/捕获.PNG) ![alt text](images/捕获1.PNG) ![alt text](images/捕获2.PNG) ![alt text](images/捕获3.PNG) ![alt text](images/捕获4.PNG) ![alt text](images/捕获5.PNG) ![alt text](images/捕获6.PNG) ![alt text](images/捕获7.PNG) ![alt text](images/捕获8.gif)
+
 ## 安装与使用
 
 1. 从 [Releases](https://github.com/YOUKNOWWHOOO/rimekit/releases) 页面下载最新版本的 zip 压缩包
