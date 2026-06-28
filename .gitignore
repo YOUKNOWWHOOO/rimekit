@@ -86,3 +86,15 @@ rimekit-*.zip
 # 禁止用宽泛扩展名或宽泛目录规则掩盖正式资源文件、正式用户数据、测试夹具、文档样例或治理资产
 
 __pycache__/
+
+# 以下为 v0.1.0 发布后新增规则
+# docs/ 不进入版本控制（发布后禁止提交文档到仓库）
+/docs/
+# .opencode/ 不进入版本控制
+/.opencode/
+# release-notes.md 不进入版本控制（Release 说明由 gh CLI 生成）
+/release-notes.md
+# 根级 scripts/ 不进入版本控制（测试脚本在 apps/windows/.../scripts/ 下）
+/scripts/
+# ime_refs/ 不进入版本控制（探针参考图）
+/ime_refs/
