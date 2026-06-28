@@ -15,6 +15,7 @@
 - 一键安装、卸载薄荷拼音输入方案
 - 一键安装、卸载词库（moetype ACG词库、搜狗网络流行新词、zhwiki百科词库）
 - 一键安装、卸载万象官方语法模型，提升长句输入准确度
+- 支持从本地文件安装（见下文「从文件安装」说明）
 - 可视化设置候选窗外观：主题、字体、字号、颜色、圆角、阴影、边框、布局等
 - 可视化设置输入行为：简繁切换、全角半角、中英文标点、Emoji 候选、声调显示、模糊音
 - 管理自定义词条（新增、删除、导入）
@@ -37,6 +38,33 @@
 8. 点击底部「应用设置」使配置生效
 
 首次使用建议顺序：安装小狼毫 → 安装薄荷方案 → 安装词库 → 调整设置。
+
+## 从文件安装
+
+如果软件自带的下载功能遇到网络问题，你也可以手动下载文件后，通过各页面的「从文件安装」按钮来安装。
+
+### 小狼毫安装器
+- **下载地址**：https://github.com/rime/weasel/releases（选择最新版 `.exe` 安装包）
+- **文件类型**：`.exe`
+- **操作方法**：承载器页 → 从文件安装 → 选择下载好的 `.exe` 文件
+
+### 输入方案
+- **下载地址**：https://github.com/Mintimate/oh-my-rime（Code → Download ZIP）
+- **文件类型**：`.zip`
+- **操作方法**：输入方案页 → 从文件安装 → 选择下载好的 `.zip` 文件
+
+### 词库
+| 词库 | 下载地址 | 文件类型 |
+|------|---------|---------|
+| moetype ACG 词库 | https://github.com/suiginko/moetype（Code → Download ZIP） | `.zip` |
+| 搜狗网络流行新词 | https://pinyin.sogou.com/dict/detail/index/4（点击下载） | `.scel` |
+| zhwiki 百科词库 | https://github.com/felixonmars/fcitx5-pinyin-zhwiki/releases（选择最新 `.dict.yaml` 文件） | `.dict.yaml` |
+- **操作方法**：词库页 → 选中对应的词库 → 从文件安装 → 选择下载好的文件
+
+### 语法模型
+- **下载地址**：https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram
+- **文件类型**：`.gram`
+- **操作方法**：语法模型页 → 从文件安装 → 选择下载好的 `.gram` 文件
 
 ## 系统要求
 
