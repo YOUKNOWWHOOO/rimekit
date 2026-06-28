@@ -1,6 +1,7 @@
 # 韵匣（RimeKit）
 
 韵匣是一个 Windows 桌面工具，帮助你管理小狼毫（Rime/Weasel）输入法。本项目通过 vibe coding 开发，目前只是非常前期的版本，如果遇到问题，欢迎提 Issues。
+主页：https://github.com/YOUKNOWWHOOO/rimekit
 
 ## 背景
 
