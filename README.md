@@ -54,12 +54,12 @@
 - **操作方法**：输入方案页 → 从文件安装 → 选择下载好的 `.zip` 文件
 
 ### 词库
-| 词库 | 下载地址 | 文件类型 |
+| 词库 | 下载地址 | 下载方式 |
 |------|---------|---------|
-| moetype ACG 词库 | https://github.com/suiginko/moetype（Code → Download ZIP） | `.zip` |
-| 搜狗网络流行新词 | https://pinyin.sogou.com/dict/detail/index/4（点击下载） | `.scel` |
-| zhwiki 百科词库 | https://github.com/felixonmars/fcitx5-pinyin-zhwiki/releases（选择最新 `.dict.yaml` 文件） | `.dict.yaml` |
-- **操作方法**：词库页 → 选中对应的词库 → 从文件安装 → 选择下载好的文件
+| moetype ACG 词库 | https://github.com/suiginko/moetype | 进入页面 → 点绿色的「Code」按钮 → Download ZIP |
+| 搜狗网络流行新词 | https://pinyin.sogou.com/dict/detail/index/4 | 进入页面 → 点击「下载」按钮，会得到一个 `.scel` 文件 |
+| zhwiki 百科词库 | **建议使用软件自带的「下载并安装」功能**（通过 GitHub API 自动获取最新版） |
+- **操作方法**：词库页 → 选中对应的词库 → 从文件安装 → 选择下载好的文件。zhwiki 词库的 Release 中仅提供 `.dict` 格式文件，不支持手动从文件安装，请使用软件自带的在线安装。
 
 ### 语法模型
 - **下载地址**：https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram
