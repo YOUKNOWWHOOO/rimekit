@@ -15,7 +15,8 @@ function Invoke-Cli {
     }
     $global:_cliExit = $LASTEXITCODE
     if ($LASTEXITCODE -ne 0) {
-        $errText = [string](Get-Content $tmpOut -Raw -Encoding UTF8 -ErrorAction SilentlyContinue)
+        $errText = ""
+        try { $errText = [string](Get-Content $tmpOut -Raw -Encoding UTF8) } catch { }
         $global:_cliError = if ($errText) { ($errText -split "`n" | Select-Object -First 6) -join "`n" } else { "" }
     } else {
         Remove-ItemSafe $tmpOut
@@ -75,15 +76,15 @@ function Invoke-PhaseRebuildCli {
     Invoke-Cli -CliArgs @("install-weasel","--format","json","--from-file",$weaselInstallerCache) -Label "install-weasel"
     Assert-CliOk "install-weasel"
     Log "  install-weasel done"
-    Start-Sleep 5
+    Start-Sleep $SleepMedium
 
     Log "B. Start WeaselServer via CLI..."
     Invoke-Cli -CliArgs @("start-weasel-server","--format","json") -Label "start-weasel-server"
     Assert-CliOk "start-weasel-server"
-    Start-Sleep 3
+    Start-Sleep $SleepMedium
 
     Log "C. Write baseline config..."
-    $minCfg | Set-Content -LiteralPath $cfg -Encoding UTF8 -NoNewline
+    $minCfg | Out-File -LiteralPath $cfg -Encoding UTF8 -NoNewline
 
     Log "D. Product CLI: install-resource rime_mint (--from-file)..."
     Invoke-Cli -CliArgs @("install-resource","--resource-id","rime_mint","--from-file",$rimeMintZipCache,"--config",$cfg,"--format","json","--force-stop-weasel") -Label "install-resource rime_mint"
@@ -94,7 +95,7 @@ function Invoke-PhaseRebuildCli {
     Invoke-Cli -CliArgs @("apply","--force-stop-weasel","--config",$cfg,"--format","json") -Label "apply"
     Assert-CliOk "apply"
     Log "  apply done"
-    Start-Sleep 5
+    Start-Sleep $SleepMedium
 
     Log "F. Verify table.bin..."
     $tblSz = WaitTableBin -TimeoutSec 60
@@ -120,14 +121,12 @@ function Invoke-PhaseRebuildCli {
         Invoke-Cli -CliArgs @("apply","--force-stop-weasel","--config",$cfg,"--format","json") -Label "re-apply"
         $ec = $global:_cliExit
         if ($ec -ne 0) { Log "  WARNING: re-apply exit $ec" }
-        Start-Sleep 5
+        Start-Sleep $SleepMedium
         $tblSz = WaitTableBin -TimeoutSec 60
         Log "  table.bin=${tblSz} B"
     }
 
-    Start-Sleep 5
-
-    Log "J. Warmup..."
+    Start-Sleep $SleepMedium
     $wuResult = Warmup
     Log "  warmup OK=$wuResult"
     if (-not $wuResult) { Log "  WARNING: warmup failed" }
@@ -139,13 +138,13 @@ function Invoke-ApplyConfig {
     Log "APPLY: applying with force-stop-weasel..."
     Invoke-Cli -CliArgs @("apply","--force-stop-weasel","--config",$cfg,"--format","json") -Label "apply-force-stop"
     Assert-CliOk "apply-force-stop"
-    Start-Sleep 10
+    Start-Sleep $SleepExtraLong
     Log "  apply + start done"
 }
 
 function Assert-Probe {
     param([string]$Text, [string]$Tag, [string]$Expected)
-    $r = Probe -Word $Text -Tag $Tag -Expected $Expected
+        $r = Invoke-Probe -Word $Text -Tag $Tag -Expected $Expected
     $status = if ($r.m) { "PASS" } else { "FAIL" }
     Log ("  {0}: {1} -> '{2}' (expected='{3}')" -f $status, $Text, $r.o, $Expected)
     return $r
@@ -153,7 +152,7 @@ function Assert-Probe {
 
 function Assert-BaselineProbe {
     param([string]$Text, [string]$Tag, [string]$Expected)
-    $r = Probe -Word $Text -Tag $Tag -Expected $Expected
+    $r = Invoke-Probe -Word $Text -Tag $Tag -Expected $Expected
     if ($r.m) {
         Log ("  UNEXPECTED: {0} -> '{1}' (expected NOT '{2}' at baseline)" -f $Text, $r.o, $Expected)
     } else {

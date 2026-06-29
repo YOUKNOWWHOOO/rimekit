@@ -78,4 +78,4 @@ foreach ($t in $setConfigFields) {
 $pass = ($results.Values | Where-Object { $_.pass }).Count
 $fail = ($results.Values | Where-Object { -not $_.pass }).Count
 LogSection "G12A RESULT: ${pass} PASS, ${fail} FAIL"
-$results | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $testDir "A_basic.json") -Encoding UTF8
+$results | ConvertTo-Json -Depth 4 | Out-File -LiteralPath (Join-Path $testDir "A_basic.json") -Encoding UTF8

@@ -17,17 +17,17 @@ Sleep(3000)
 Send("{LWin up}")
 ExitApp(0)
 '@
-$ahkScript | Set-Content -LiteralPath $pickerAhk -Encoding UTF8
+$ahkScript | Out-File -LiteralPath $pickerAhk -Encoding UTF8
 
 Invoke-Cli -CliArgs @("open-input-method-picker","--format","json") -Label "open-input-method-picker" | Out-Null
 Log "  exitCode=$($global:_cliExit)"
-Start-Sleep 1
+Start-Sleep $SleepShort
 if ($ahkExe) {
     Start-Process $ahkExe -ArgumentList $pickerAhk -WindowStyle Hidden
 } else {
     Log "  WARNING: AutoHotkey64.exe not found, picker screenshot may be incomplete"
 }
-Start-Sleep 2
+Start-Sleep $SleepShort
 python $takeScreenshotPy (Join-Path $screenshotDir "输入法选择器_ON.png") 2>$null
-Start-Sleep 4
+Start-Sleep $SleepMedium
 Log "G13 Phase B complete"

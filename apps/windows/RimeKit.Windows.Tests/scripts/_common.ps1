@@ -26,6 +26,7 @@ $SleepPoll = 0.5
 $SleepShort = 1
 $SleepMedium = 3
 $SleepLong = 8
+$SleepExtraLong = 10
 
 $minCfg = @'
 {
@@ -48,8 +49,8 @@ $minCfg = @'
 function Init-WorkDir {
     $script:runTs = Get-Date -Format 'yyyyMMdd-HHmmss'
     $resultsClean = Join-Path $PSScriptRoot "groups\results\_latest"
-    Remove-Item $resultsClean -Recurse -Force -ErrorAction SilentlyContinue
-    Remove-Item $workDir -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-ItemSafe -Path $resultsClean -Recurse
+    Remove-ItemSafe -Path $workDir -Recurse
     New-Item -ItemType Directory -Force -Path $workDir | Out-Null
     $script:persistDir = Join-Path $PSScriptRoot "groups\results\$script:runTs"
     New-Item -ItemType Directory -Force -Path $script:persistDir | Out-Null
@@ -65,7 +66,11 @@ function Log {
     $line = "[${ts}] ${Message}"
     [Console]::Error.WriteLine($line)
     if ($script:logFile) {
-        Add-Content -LiteralPath $script:logFile -Value $line -Encoding UTF8 -ErrorAction SilentlyContinue
+        try {
+            Add-Content -LiteralPath $script:logFile -Value $line -Encoding UTF8
+        } catch {
+            [Console]::Error.WriteLine("[Log] 无法写入日志文件: $_")
+        }
     }
 }
 
@@ -91,7 +96,7 @@ function Invoke-RestartWeaselServer {
     }
     Start-Process $serverExe -WindowStyle Hidden
     for ($i = 1; $i -le 10; $i++) {
-        Start-Sleep 1
+        Start-Sleep $SleepShort
         if (@(Get-Process "WeaselServer" -ErrorAction SilentlyContinue).Count -gt 0) {
             Log "  WeaselServer running after ${i}s"
             return $true
@@ -110,7 +115,7 @@ function WaitTableBin {
             $sz = (Get-Item $tablePath).Length
             if ($sz -gt 0) { return $sz }
         }
-        Start-Sleep -Milliseconds 500
+        Start-Sleep $SleepPoll
     }
     return 0
 }
@@ -125,8 +130,9 @@ function Warmup {
     }
     for ($i = 1; $i -le 6; $i++) {
         $f = Join-Path $workDir "warmup_${i}.json"
-        python $probePy --phase=vision "wu${i}" "nihao" '{SPACE}' > $f
-        Start-Sleep 2
+        python $probePy --phase=vision "wu${i}" "nihao" '{SPACE}' 2>$null | Out-File -LiteralPath $f -Encoding UTF8
+        if (-not $?) { Log "  warmup ${i}: python failed"; continue }
+        Start-Sleep $SleepShort
         if (-not (Test-Path $f)) { Log "  warmup ${i}: no output file"; continue }
         $c = Get-Content -LiteralPath $f -Encoding UTF8 -Raw
         if (-not $c) { Log "  warmup ${i}: empty file"; continue }
@@ -143,17 +149,24 @@ function Warmup {
 function Write-Persist {
     param([hashtable]$Result)
     $line = ConvertTo-Json -InputObject $Result -Compress
-    Add-Content -LiteralPath $script:persistFile -Value $line -Encoding UTF8 -ErrorAction SilentlyContinue
+    if ($script:persistFile) {
+        try {
+            Add-Content -LiteralPath $script:persistFile -Value $line -Encoding UTF8
+        } catch {
+            Log "  WARNING: Write-Persist 失败: $_"
+        }
+    }
 }
 
-function Probe {
+function Invoke-Probe {
     param([string]$Word, [string]$Tag, [string]$Expected)
     $r = $null
     for ($attempt = 1; $attempt -le 4; $attempt++) {
         Log ("  PROBE: {0} ({1}) expect={2} (attempt {3})" -f $Tag, $Word, $Expected, $attempt)
         $f = Join-Path $workDir "${Tag}.json"
-        python $probePy --phase=vision $Tag $Word '{SPACE}' > $f 2>$null
-        Start-Sleep 2
+        python $probePy --phase=vision $Tag $Word '{SPACE}' 2>$null | Out-File -LiteralPath $f -Encoding UTF8
+        if (-not $?) { Log "  PROBE: python failed"; $r = @{o=""; s="python_fail"; e=$Expected; w=$Word; m=$false }; continue }
+        Start-Sleep $SleepShort
         if (-not (Test-Path $f)) { $r = @{o=""; s="no_file"; e=$Expected; w=$Word; m=$false }; continue }
         $c = Get-Content -LiteralPath $f -Encoding UTF8 -Raw
         if (-not $c) { $r = @{o=""; s="empty"; e=$Expected; w=$Word; m=$false }; continue }
@@ -220,7 +233,8 @@ function Remove-ItemSafe {
     param([string]$Path, [switch]$Recurse)
     if (-not (Test-Path -LiteralPath $Path)) { return $true }
     for ($attempt = 0; $attempt -lt 10; $attempt++) {
-        Remove-Item -LiteralPath $Path -Recurse:$Recurse -Force -ErrorAction SilentlyContinue
+        if ($Recurse) { Remove-Item -LiteralPath $Path -Recurse -Force }
+        else { Remove-Item -LiteralPath $Path -Force }
         if (-not (Test-Path -LiteralPath $Path)) { return $true }
         $delay = [Math]::Min(200 * [Math]::Pow(2, $attempt), 4000)
         Start-Sleep -Milliseconds $delay
@@ -235,9 +249,10 @@ function Copy-ItemSafe {
     $sourceExists = if ($hasWildcard) { Test-Path -Path $Source } else { Test-Path -LiteralPath $Source }
     if (-not $sourceExists) { throw "Copy-ItemSafe: source not found: ${Source}" }
     for ($attempt = 0; $attempt -lt 10; $attempt++) {
-        if ($hasWildcard) { Copy-Item -Path $Source -Destination $Destination -Recurse:$Recurse -Force -ErrorAction SilentlyContinue }
-        else { Copy-Item -LiteralPath $Source -Destination $Destination -Recurse:$Recurse -Force -ErrorAction SilentlyContinue }
-        if (Test-Path -LiteralPath $Destination) { return $true }
+        if ($hasWildcard) { Copy-Item -Path $Source -Destination $Destination -Recurse:$Recurse -Force }
+        else { Copy-Item -LiteralPath $Source -Destination $Destination -Recurse:$Recurse -Force }
+        $destTest = if ($hasWildcard) { Test-Path -LiteralPath $Destination } else { Test-Path -LiteralPath $Destination }
+        if ($destTest) { return $true }
         $delay = [Math]::Min(200 * [Math]::Pow(2, $attempt), 4000)
         Start-Sleep -Milliseconds $delay
     }

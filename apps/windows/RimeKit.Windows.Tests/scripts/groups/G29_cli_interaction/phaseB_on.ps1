@@ -34,4 +34,4 @@ $fail = ($results.Values | Where-Object { -not $_.pass }).Count
 LogSection "G29B RESULT: ${pass} PASS, ${fail} FAIL"
 $testDir = Join-Path $PSScriptRoot "..\results\G29_cli_interaction"
 New-Item -ItemType Directory -Force -Path $testDir | Out-Null
-$results | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $testDir "B_on.json") -Encoding UTF8
+$results | ConvertTo-Json -Depth 4 | Out-File -LiteralPath (Join-Path $testDir "B_on.json") -Encoding UTF8

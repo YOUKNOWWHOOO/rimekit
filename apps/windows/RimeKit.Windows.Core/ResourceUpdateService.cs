@@ -235,6 +235,13 @@ internal sealed class ResourceUpdateService
 
     public string CheckForUpdates()
     {
+        string payload = BuildCheckForUpdatesPayload();
+        RepositoryContext.WriteUtf8(Path.Combine(_repositoryContext.StateRoot, "last_resource_update_report.json"), payload);
+        return payload;
+    }
+
+    public string BuildCheckForUpdatesPayload()
+    {
         using JsonDocument document = JsonDocument.Parse(RepositoryContext.ReadUtf8(_repositoryContext.SharedSpecPath("resource_manifest.json")));
         Dictionary<string, InstalledResourceState> installedStates = LoadInstalledResourceStates();
         WindowsRuntimeControls controls = _repositoryContext.LoadWindowsRuntimeControls();
@@ -314,14 +321,11 @@ internal sealed class ResourceUpdateService
             installedState: null,
             currentVersion: environment.WeaselVersion));
 
-        string payload = JsonSerializer.Serialize(new
+        return JsonSerializer.Serialize(new
         {
             checked_at = DateTimeOffset.UtcNow,
             items,
         }, JsonOptions);
-
-        RepositoryContext.WriteUtf8(Path.Combine(_repositoryContext.StateRoot, "last_resource_update_report.json"), payload);
-        return payload;
     }
 
     private static void EnsureCleanDirectory(string directory)

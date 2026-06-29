@@ -356,9 +356,7 @@ internal sealed class RepositoryContext
         string path = Path.Combine(StateRoot, "windows_runtime_controls.json");
         if (!File.Exists(path))
         {
-            WindowsRuntimeControls defaults = new();
-            SaveWindowsRuntimeControls(defaults);
-            return defaults;
+            return new WindowsRuntimeControls();
         }
 
         WindowsRuntimeControls? deserialized = JsonSerializer.Deserialize<WindowsRuntimeControls>(ReadUtf8(path), JsonOptions);

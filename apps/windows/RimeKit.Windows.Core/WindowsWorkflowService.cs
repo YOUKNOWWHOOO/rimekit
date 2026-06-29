@@ -41,9 +41,7 @@ public sealed class WindowsWorkflowService
 
     public ConfigModel GetConfigModelForEditing(string? configPath)
     {
-        ConfigModel model = LoadPreferredConfigModel(configPath, allowDefault: true);
-        _repositoryContext.PersistCurrentConfigModel(model);
-        return model;
+        return LoadPreferredConfigModel(configPath, allowDefault: true);
     }
 
     public WorkflowTaskDefinition? GetWindowsTaskDefinition(string taskId)
@@ -135,8 +133,8 @@ public sealed class WindowsWorkflowService
             ConfigModel configModel = LoadPreferredConfigModel(null, allowDefault: true);
             WindowsEnvironmentState environment = WindowsEnvironmentService.Detect(configModel);
             string currentVersion = environment.WeaselVersion ?? UnknownVersionDisplayText;
-            string report = _resourceUpdateService.CheckForUpdates();
-            using JsonDocument doc = JsonDocument.Parse(report);
+            string rawPayload = _resourceUpdateService.BuildCheckForUpdatesPayload();
+            using JsonDocument doc = JsonDocument.Parse(rawPayload);
             string summary;
             if (doc.RootElement.TryGetProperty("items", out JsonElement items))
             {
@@ -171,8 +169,8 @@ public sealed class WindowsWorkflowService
             {
                 return new CommandExecutionResult { ExitCode = 1, TextOutput = "当前未选择有效资源，无法检查更新。" };
             }
-            string report = _resourceUpdateService.CheckForUpdates();
-            using JsonDocument doc = JsonDocument.Parse(report);
+            string rawPayload = _resourceUpdateService.BuildCheckForUpdatesPayload();
+            using JsonDocument doc = JsonDocument.Parse(rawPayload);
             if (doc.RootElement.TryGetProperty("items", out JsonElement items))
             {
                 foreach (JsonElement item in items.EnumerateArray())
@@ -325,7 +323,7 @@ public sealed class WindowsWorkflowService
                     throw new InvalidOperationException($"静默安装器返回了非零退出码：{process.ExitCode}");
                 }
 
-                CommandExecutionResult recheckResult = RunEnvironmentRecheck(null, outputFormat);
+                CommandExecutionResult recheckResult = ApplyAndCleanupAfterPendingOperation(null, outputFormat);
                 WindowsEnvironmentState refreshedEnvironment = WindowsEnvironmentService.Detect(configModel);
                 if (!refreshedEnvironment.WeaselAvailable)
                 {
@@ -489,7 +487,7 @@ public sealed class WindowsWorkflowService
                     throw new InvalidOperationException($"静默安装器返回了非零退出码：{process.ExitCode}");
                 }
 
-                CommandExecutionResult recheckResult = RunEnvironmentRecheck(null, outputFormat);
+                CommandExecutionResult recheckResult = ApplyAndCleanupAfterPendingOperation(null, outputFormat);
                 WindowsEnvironmentState refreshedEnvironment = WindowsEnvironmentService.Detect(configModel);
                 if (!refreshedEnvironment.WeaselAvailable)
                 {
@@ -587,17 +585,25 @@ public sealed class WindowsWorkflowService
     {
         ConfigModel configModel = LoadPreferredConfigModel(null, allowDefault: true);
         WindowsEnvironmentState environment = WindowsEnvironmentService.Detect(configModel);
-        WindowsRuntimeControls controls = _repositoryContext.LoadWindowsRuntimeControls();
-        _repositoryContext.PersistCurrentConfigModel(configModel);
-        _repositoryContext.PersistRuntimePathCache(environment);
 
         if (string.IsNullOrWhiteSpace(environment.DeployerPath))
         {
-            return RunLaunchWeaselInstaller(
-                outputFormat,
-                relatedTaskId: "windows_check_deployer_health",
-                successNextAction: "未检测到部署器，已自动发起重新安装；请完成安装后返回应用重新检测。",
-                silentSuccessNextAction: "未检测到部署器，已静默执行重新安装并自动再次确认当前状态。");
+            string message = "未检测到小狼毫部署器。请使用「下载并安装小狼毫」进行安装。";
+            object payload = new
+            {
+                platform = "windows",
+                phase = WorkflowPhases.Detect,
+                status = WorkflowStatuses.Blocked,
+                next_action = message,
+            };
+            return new CommandExecutionResult
+            {
+                ExitCode = 1,
+                TextOutput = outputFormat.Equals("json", StringComparison.OrdinalIgnoreCase)
+                    ? JsonSerializer.Serialize(payload, JsonOptions)
+                    : message,
+                JsonPayload = outputFormat.Equals("json", StringComparison.OrdinalIgnoreCase) ? payload : null,
+            };
         }
 
         try
@@ -635,11 +641,6 @@ public sealed class WindowsWorkflowService
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
-            if (controls.AutoOpenLogsAfterRepairFailure)
-            {
-                TryOpenExternalPath(_repositoryContext.LogsRoot);
-            }
-
             DiagnosticReport failed = BuildDiagnosticReport(
                 WorkflowPhases.Detect,
                 WorkflowStatuses.Failed,
@@ -875,8 +876,8 @@ public sealed class WindowsWorkflowService
 
                 phase?.Invoke("卸载完成，正在确认…");
                 UninstallTrace("===== POST-UNINSTALL START =====");
-                UninstallTrace($"Step 1: RunEnvironmentRecheck...");
-                CommandExecutionResult recheckResult = RunEnvironmentRecheck(null, outputFormat);
+                UninstallTrace($"Step 1: ApplyAndCleanupAfterPendingOperation...");
+                CommandExecutionResult recheckResult = ApplyAndCleanupAfterPendingOperation(null, outputFormat);
                 UninstallTrace($"Step 1 done: ExitCode={recheckResult.ExitCode}");
 
                 ConfigModel refreshedModel = LoadPreferredConfigModel(null, allowDefault: true);
@@ -1049,7 +1050,7 @@ public sealed class WindowsWorkflowService
 
     public CommandExecutionResult RunDoctor(string? configPath, string outputFormat)
     {
-        return RunEnvironmentRecheck(configPath, outputFormat);
+        return RunReadonlyRecheck(configPath, outputFormat);
     }
 
     public CommandExecutionResult RunActivateWeaselProfile(string outputFormat)
@@ -1091,7 +1092,7 @@ public sealed class WindowsWorkflowService
     {
         WindowsRuntimeControls controls = _repositoryContext.LoadWindowsRuntimeControls();
         return controls.AutoRecheckOnReturn
-            ? RunEnvironmentRecheck(configPath, outputFormat)
+            ? RunReadonlyRecheck(configPath, outputFormat)
             : new CommandExecutionResult
             {
                 ExitCode = 0,
@@ -1138,7 +1139,63 @@ public sealed class WindowsWorkflowService
         return RepositoryContext.ExpandPath(configModel.SyncSettings.WindowsTargetRoot);
     }
 
-    private CommandExecutionResult RunEnvironmentRecheck(string? configPath, string outputFormat)
+    /// <summary>
+    /// 纯只读的重新检测方法。仅执行检测和诊断，不做任何写入/删除/清理操作。
+    /// 用于 doctor 命令和所有 GUI"检测"按钮。
+    /// </summary>
+    private CommandExecutionResult RunReadonlyRecheck(string? configPath, string outputFormat)
+    {
+        ConfigModel configModel = LoadPreferredConfigModel(configPath, allowDefault: true);
+        WindowsEnvironmentState environment = WindowsEnvironmentService.Detect(configModel);
+
+        List<DiagnosticFinding> findings = [];
+        IReadOnlyList<DiagnosticFinding> environmentFindings = WindowsEnvironmentService.Validate(environment, configModel, CreateFinding);
+        if (string.Equals(environment.ForegroundProcessName, "RimeKit.Windows.Gui.exe", StringComparison.OrdinalIgnoreCase))
+        {
+            environmentFindings = environmentFindings
+                .Where(finding => !string.Equals(finding.Code, "WINDOWS_FOREGROUND_IME_CLOSED", StringComparison.Ordinal))
+                .ToArray();
+        }
+        findings.AddRange(environmentFindings);
+
+        if (environment.WeaselAvailable)
+        {
+            string[] missingRuntimeFiles = FindMissingWindowsRuntimeFiles(environment.WindowsTargetRoot);
+            if (missingRuntimeFiles.Length > 0)
+            {
+                findings.Add(CreateFinding(
+                    "WINDOWS_RUNTIME_FILES_MISSING",
+                    $"当前输入法目录缺少关键运行文件：{string.Join("、", missingRuntimeFiles)}"));
+            }
+        }
+        if (!string.IsNullOrWhiteSpace(configPath))
+        {
+            findings.AddRange(_configModelService.Validate(configModel, CreateFinding));
+        }
+
+        List<DiagnosticFinding> blockingFindings = findings
+            .Where(static finding => !string.Equals(finding.Severity, WorkflowSeverities.Warning, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        DiagnosticReport report = BuildDiagnosticReport(
+            WorkflowPhases.Detect,
+            blockingFindings.Count == 0
+                ? findings.Count == 0 ? WorkflowStatuses.Completed : WorkflowStatuses.Completed
+                : WorkflowStatuses.Blocked,
+            findings,
+            "none",
+            false,
+            false,
+            blockingFindings.Count > 0);
+        return CreateCommandResult(report, outputFormat);
+    }
+
+    /// <summary>
+    /// 在安装/卸载等操作完成后执行待处理的清理任务并重新检测。
+    /// 此方法会调用 FinalizePendingWeaselInstall 和 FinalizePendingWeaselUninstall，
+    /// 可能执行破坏性操作（删除目录、清除 installed_resources.json 等）。
+    /// 仅限安装/卸载成功回调调用，不得从检测/诊断路径调用。
+    /// </summary>
+    private CommandExecutionResult ApplyAndCleanupAfterPendingOperation(string? configPath, string outputFormat)
     {
         ConfigModel configModel = LoadPreferredConfigModel(configPath, allowDefault: true);
         WindowsEnvironmentState environment = WindowsEnvironmentService.Detect(configModel);
@@ -1209,7 +1266,6 @@ public sealed class WindowsWorkflowService
     public CommandExecutionResult RunPrintConfig(string? configPath, string outputFormat)
     {
         ConfigModel model = LoadPreferredConfigModel(configPath, allowDefault: true);
-        _repositoryContext.PersistCurrentConfigModel(model);
         string targetRoot = RepositoryContext.ExpandPath(model.SyncSettings.WindowsTargetRoot);
         WeaselUserSettings weasel = UserSettingsReader.ReadWeasel(targetRoot);
         MintUserSettings mint = UserSettingsReader.ReadMint(targetRoot, "rime_mint");
@@ -1723,8 +1779,8 @@ public sealed class WindowsWorkflowService
 
                 if (weaselUninstalled)
                 {
-                    UninstallTrace("RunUninstallAll: weaselUninstalled=true, calling RunEnvironmentRecheck...");
-                    CommandExecutionResult recheckResult = RunEnvironmentRecheck(null, outputFormat);
+                    UninstallTrace("RunUninstallAll: weaselUninstalled=true, calling ApplyAndCleanupAfterPendingOperation...");
+                    CommandExecutionResult recheckResult = ApplyAndCleanupAfterPendingOperation(null, outputFormat);
                     UninstallTrace($"RunUninstallAll: recheck done, ExitCode={recheckResult.ExitCode}");
                 }
 

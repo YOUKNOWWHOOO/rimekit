@@ -7,6 +7,6 @@ Log "G13 Phase A: CLI open-input-method-picker baseline"
 Invoke-Cli -CliArgs @("open-input-method-picker","--format","json") -Label "open-input-method-picker" | Out-Null
 $ec = $global:_cliExit
 Log "  exitCode=$ec"
-Start-Sleep 2
+Start-Sleep $SleepShort
 python $takeScreenshotPy (Join-Path $screenshotDir "输入法选择器_OFF.png") 2>$null
 Log "G13 Phase A complete"

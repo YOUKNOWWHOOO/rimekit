@@ -27,26 +27,7 @@ internal static class WindowsEnvironmentService
         (string? foregroundProcessName, string? foregroundKeyboardLayout, bool? foregroundInputContextOpen, string? foregroundConversionStatus) =
             CaptureForegroundInputSnapshot();
 
-        bool targetRootAccessible;
-        try
-        {
-            string accessProbeRoot = Directory.Exists(targetRoot)
-                ? targetRoot
-                : Path.GetDirectoryName(targetRoot) ?? targetRoot;
-            Directory.CreateDirectory(accessProbeRoot);
-            string probeFile = Path.Combine(accessProbeRoot, $".rimekit-access-{Guid.NewGuid():N}.tmp");
-            File.WriteAllText(probeFile, "probe");
-            if (File.Exists(probeFile))
-            {
-                File.Delete(probeFile);
-            }
-            targetRootAccessible = true;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[EnvironmentService] Validate target-root check failed: {ex.Message}");
-            targetRootAccessible = false;
-        }
+        bool targetRootAccessible = Directory.Exists(targetRoot);
 
         return new WindowsEnvironmentState
         {

@@ -32,6 +32,7 @@ public class WindowsPrototypeForm : Form
     private bool _inputSchemeDetected;
     private bool _templatesAreMissing;
     private bool _prevCarrierAvailable;
+    private bool _isRechecking;
     private bool _showingTemplateDefaults;
     private string? _dayBaseScheme;
     private string? _nightBaseScheme;
@@ -407,8 +408,9 @@ public class WindowsPrototypeForm : Form
     protected override void OnActivated(EventArgs e)
     {
         base.OnActivated(e);
-        if (_workflowService.HasPendingWeaselOperation())
+        if (_workflowService.HasPendingWeaselOperation() && !_isRechecking)
         {
+            _isRechecking = true;
             _ = RunWorkflowOperationAsync(
                 "正在自动回检承载器状态…",
                 _ => CreateDetectionProbeResult(_workflowService.BuildWindowsCarrierStateView(_configModelPath)),
@@ -420,6 +422,7 @@ public class WindowsPrototypeForm : Form
                 }).ContinueWith(
                 t =>
                 {
+                    _isRechecking = false;
                     if (t.IsFaulted && t.Exception is not null)
                     {
                         System.Diagnostics.Debug.WriteLine($"[Gui] OnActivated auto-recheck failed: {t.Exception.InnerException?.Message}");
@@ -3581,9 +3584,9 @@ public class WindowsPrototypeForm : Form
             {
                 onClick(s, e);
             }
-            catch (Exception ex) when (ex is InvalidOperationException)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[GUI] Button '{button.Name}' handler failed: {ex}");
+                System.Diagnostics.Debug.WriteLine($"[GUI] Button '{button.Name}' handler: {ex.Message}");
             }
         };
         return button;

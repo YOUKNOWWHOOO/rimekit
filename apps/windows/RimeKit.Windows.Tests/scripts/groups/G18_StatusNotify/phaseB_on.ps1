@@ -15,7 +15,7 @@ Start-Sleep $SleepLong
 python $probePy --phase=screenshot "G18_B" "a" 2>$null
 Start-Sleep $SleepShort
 if ($ahkExe) { & $ahkExe $toggleAhk 2>$null }
-Start-Sleep 0
+Start-Sleep $SleepPoll
 python $takeScreenshotPy (Join-Path $screenshotDir "状态变化通知_G18_B.png") 2>$null
 Stop-NotepadSafe
 Start-Sleep $SleepShort
