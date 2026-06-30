@@ -71,3 +71,11 @@ rimekit-*.zip
 /docs/未定项记录.html
 
 __pycache__/
+
+# 禁止提交的文档和运行产物目录（§7.4.135）
+/docs/
+/.opencode/
+/ime_refs/
+/images/
+/scripts/
+/release-notes.md
