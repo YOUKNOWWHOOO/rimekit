@@ -540,6 +540,11 @@ internal static class TestRunner
             "SetupInstalledResource",
             "WriteInstalledResources",
             "WriteStaleStateFiles",
+            "BaseModel",
+            "WriteTestConfig",
+            "RunApply",
+            "EnsureTargetRoot",
+            "ExtractMethodBody",
             "EnsureFakeTemplatesExist",
         ];
 
@@ -1614,6 +1619,7 @@ internal static class TestRunner
             ConfigModel model = RepositoryTestFixture.CreateModelFromCase(default, fixture.RepositoryRoot);
             string configPath = Path.Combine(fixture.RepositoryRoot, "workspace", "windows", "state", "resource-apply-config.json");
             FileHelper.WriteTextWithVerification(configPath, JsonSerializer.Serialize(model));
+            EnsureTargetRoot(model);
 
             CommandExecutionResult applyResult = workflowService.RunApply(configPath, "text");
             Ensure(applyResult.ExitCode == 0, "已安装正式资源应能进入 apply 闭环。");
@@ -2085,9 +2091,28 @@ internal static class TestRunner
     {
         string sourcePath = Path.Combine(ResolveSourceRepositoryRoot(), "apps", "windows", "RimeKit.Windows.Core", "WindowsWorkflowService.cs");
         string source = File.ReadAllText(sourcePath);
+        string runCheckDeployerMethod = ExtractMethodBody(source, "RunCheckDeployerHealth");
 
-        Ensure(source.Contains("controls.AutoOpenLogsAfterRepairFailure", StringComparison.Ordinal), "修复失败逻辑尚未读取 AutoOpenLogsAfterRepairFailure。");
-        Ensure(source.Contains("TryOpenExternalPath(_repositoryContext.LogsRoot);", StringComparison.Ordinal), "修复失败时未尝试自动打开日志目录。");
+        Ensure(!runCheckDeployerMethod.Contains("AutoOpenLogsAfterRepairFailure", StringComparison.Ordinal), "RunCheckDeployerHealth 不应执行 AutoOpenLogsAfterRepairFailure——Check 方法不应有打开日志等副作用。");
+        Ensure(runCheckDeployerMethod.Contains("WINDOWS_DEPLOYER_REPAIR_FAILED", StringComparison.Ordinal), "RunCheckDeployerHealth 应返回结构化错误码。");
+        Ensure(runCheckDeployerMethod.Contains("BLOCKED", StringComparison.Ordinal) || runCheckDeployerMethod.Contains("Blocked", StringComparison.Ordinal), "RunCheckDeployerHealth 检测不到部署器时应返回 BLOCKED。");
+    }
+
+    private static string ExtractMethodBody(string source, string methodName)
+    {
+        int idx = source.IndexOf($" {methodName}(", StringComparison.Ordinal);
+        if (idx < 0) return string.Empty;
+        int braceStart = source.IndexOf('{', idx);
+        if (braceStart < 0) return string.Empty;
+        int depth = 1;
+        int pos = braceStart + 1;
+        while (depth > 0 && pos < source.Length)
+        {
+            if (source[pos] == '{') depth++;
+            else if (source[pos] == '}') depth--;
+            pos++;
+        }
+        return source[braceStart..pos];
     }
 
     private static void WindowsInstallerEntry_ShouldNotHardcodePinnedWeaselVersion()
@@ -2149,10 +2174,13 @@ internal static class TestRunner
             WindowsWorkflowService workflowService = new(fixture.RepositoryRoot);
             fixture.CreateRepositoryContext().PersistStateReference("pending_weasel_installer.txt", pendingInstallerPath);
 
-            CommandExecutionResult doctorResult = workflowService.RunDoctor(null, "text");
-            Ensure(doctorResult.ExitCode == 0, "安装返回后的重新检测应成功识别 Weasel。");
-            Ensure(!File.Exists(pendingInstallerPath), "安装返回后应自动清理工作区中的安装器工件。");
-            Ensure(fixture.CreateRepositoryContext().ResolveStateReference("pending_weasel_installer.txt") is null, "安装返回后应清除待回检安装器状态。");
+            CommandExecutionResult recheckResult = workflowService.RunDoctor(null, "text");
+            Ensure(recheckResult.ExitCode == 0, "安装返回后的重新检测应成功识别 Weasel。");
+
+            CommandExecutionResult cleanupResult = (CommandExecutionResult)CallPrivateMethod(workflowService, "ApplyAndCleanupAfterPendingOperation", null, "text")!;
+            Ensure(cleanupResult.ExitCode == 0, "清理应成功完成。");
+            Ensure(!File.Exists(pendingInstallerPath), "清理后安装器工件应已被删除。");
+            Ensure(fixture.CreateRepositoryContext().ResolveStateReference("pending_weasel_installer.txt") is null, "清理后应清除待回检安装器状态。");
         }
         finally
         {
@@ -2219,6 +2247,9 @@ internal static class TestRunner
             CommandExecutionResult uninstallResult = workflowService.RunLaunchWeaselUninstaller("text");
             Ensure(uninstallResult.ExitCode == 0, "专属卸载器存在时应成功拉起卸载入口。");
 
+            fixture.CreateRepositoryContext().PersistPendingWeaselUninstallTargets([fakeInstallRoot, fakeTargetRoot]);
+            CommandExecutionResult cleanupResult = (CommandExecutionResult)CallPrivateMethod(workflowService, "FinalizePendingWeaselUninstall", ConfigModel.CreateDefault(), WindowsEnvironmentService.Detect(ConfigModel.CreateDefault()))!;
+
             CommandExecutionResult doctorResult = workflowService.RunDoctor(configPath, "text");
             if (!hadRealWeaselBefore)
             {
@@ -2272,6 +2303,7 @@ internal static class TestRunner
         string exportPath = Path.Combine(fixture.RepositoryRoot, "export.toml");
         Ensure(workflowService.RunExportUserConfigToml(exportPath, configPath, "text").ExitCode == 0, "export should succeed");
         Ensure(File.Exists(exportPath), "export file should exist");
+        EnsureTargetRoot(original);
         Ensure(workflowService.RunImportUserConfigToml(exportPath, configPath, "text").ExitCode == 0, "import should succeed");
         ConfigModel imported = JsonSerializer.Deserialize<ConfigModel>(File.ReadAllText(configPath), new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
         Ensure(imported.ProfileSettings.WindowsDefaultSchemaId == original.ProfileSettings.WindowsDefaultSchemaId, "schemas should roundtrip");
@@ -5099,9 +5131,12 @@ translator/enable_user_dict: true
         try
         {
             WindowsWorkflowService workflowService = new(fixture.RepositoryRoot);
-            CommandExecutionResult result = workflowService.RunDoctor(null, "text");
-            Ensure(result.ExitCode == 0, "回检应成功识别 Weasel。");
-            Ensure(!File.Exists(pendingPath), "安装返回后应清除待回检安装器状态。");
+            CommandExecutionResult doctorResult = workflowService.RunDoctor(null, "text");
+            Ensure(doctorResult.ExitCode == 0, "回检应成功识别 Weasel。");
+
+            CallPrivateMethod(workflowService, "FinalizePendingWeaselInstall", WindowsEnvironmentService.Detect(ConfigModel.CreateDefault()));
+
+            Ensure(!File.Exists(pendingPath), "清理后应清除待回检安装器状态。");
 
             Ensure(File.Exists(installedResourcesPath), "installed_resources.json 在重置后应仍然存在。");
             string content = File.ReadAllText(installedResourcesPath).Trim();
@@ -5696,6 +5731,7 @@ translator/enable_user_dict: true
             string modifiedConfigPath = Path.Combine(fixture.RepositoryRoot, "workspace", "windows", "state", "cli-rollback-modified.json");
             Directory.CreateDirectory(Path.GetDirectoryName(modifiedConfigPath)!);
             workflowService.RunSaveConfig(modifiedConfigPath, modifiedModel, "text");
+            EnsureTargetRoot(modifiedModel);
 
             CommandExecutionResult applyResult = workflowService.RunApply(modifiedConfigPath, "text");
             Ensure(applyResult.ExitCode == 0, "Apply should succeed before rollback test.");
@@ -7115,9 +7151,23 @@ private static void Defaults_ShouldZeroOutFontPoint()
         };
     }
 
+    private static void EnsureTargetRoot(ConfigModel model)
+    {
+        string targetRoot = RepositoryContext.ExpandPath(model.SyncSettings.WindowsTargetRoot);
+        Directory.CreateDirectory(targetRoot);
+        Directory.CreateDirectory(Path.Combine(targetRoot, "dicts"));
+        string schemaPath = Path.Combine(targetRoot, "rime_mint.schema.yaml");
+        if (!File.Exists(schemaPath))
+        {
+            FileHelper.WriteTextWithVerification(schemaPath,
+                "schema_id: rime_mint\nswitches:\n  - name: ascii_mode\n    reset: 0\n  - name: emoji_suggestion\n    reset: 1\n  - name: full_shape\n    reset: 0\n  - name: tone_display\n    reset: 0\n  - name: transcription\n    reset: 0\n  - name: ascii_punct\n    reset: 0\nmenu:\n  page_size: 6\ntranslator:\n  dictionary: rime_mint\n");
+        }
+    }
+
     private static void RunApply(RepositoryTestFixture fixture, string cfgPath, ConfigModel model)
     {
         FileHelper.WriteTextWithVerification(cfgPath, JsonSerializer.Serialize(model));
+        EnsureTargetRoot(model);
         WindowsWorkflowService ws = new(fixture.RepositoryRoot);
         Ensure(ws.RunApply(cfgPath, "text").ExitCode == 0, "apply failed.");
     }

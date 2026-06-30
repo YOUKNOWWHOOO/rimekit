@@ -36,6 +36,15 @@ internal sealed class RepositoryTestFixture : IDisposable
         Directory.CreateDirectory(Path.GetDirectoryName(fakeDeployerPath)!);
         File.WriteAllText(fakeDeployerPath, "@echo off\r\nexit /b 0\r\n");
         Environment.SetEnvironmentVariable("RIMEKIT_WEASEL_DEPLOYER_PATH", fakeDeployerPath);
+
+        string schemaContent = "schema_id: rime_mint\nswitches:\n  - name: ascii_mode\n    reset: 0\n  - name: emoji_suggestion\n    reset: 1\n  - name: full_shape\n    reset: 0\n  - name: tone_display\n    reset: 0\n  - name: transcription\n    reset: 0\n  - name: ascii_punct\n    reset: 0\nmenu:\n  page_size: 6\ntranslator:\n  dictionary: rime_mint\n  enable_user_dict: true\n";
+        string appDataRime = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Rime");
+        Directory.CreateDirectory(appDataRime);
+        FileHelper.WriteTextWithVerification(Path.Combine(appDataRime, "rime_mint.schema.yaml"), schemaContent);
+        FileHelper.WriteTextWithVerification(Path.Combine(appDataRime, "weasel.yaml"), "style/font_point: 12\nshow_notifications: true\n");
+        FileHelper.WriteTextWithVerification(Path.Combine(appDataRime, "default.custom.yaml"), "patch:");
+        FileHelper.WriteTextWithVerification(Path.Combine(appDataRime, "rime_mint.custom.yaml"), "patch:");
+        FileHelper.WriteTextWithVerification(Path.Combine(appDataRime, "rime_mint.dict.yaml"), "");
     }
 
     public string RepositoryRoot => _workspaceRoot;

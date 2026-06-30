@@ -2360,15 +2360,25 @@ public sealed class WindowsWorkflowService
             _repositoryContext.PersistCurrentConfigModel(normalizedModel);
         }
 
-        CommandExecutionResult result = ExecuteApplyWorkflow(
-            configModel: normalizedModel,
-            environment: default!,
-            outputFormat: outputFormat,
-            snapshotId: null,
-            windowsOutputFiles: null,
-            windowsBinaryOutputFiles: null,
-            userDictionaryFiles: null,
-            createArtifacts: true);
+            string targetRoot = RepositoryContext.ExpandPath(normalizedModel.SyncSettings.WindowsTargetRoot);
+            Directory.CreateDirectory(targetRoot);
+            string schemaPath = Path.Combine(targetRoot, "rime_mint.schema.yaml");
+            if (!File.Exists(schemaPath) && normalizedModel.ProfileSettings.EnabledSchemaIds.Contains("rime_mint", StringComparer.OrdinalIgnoreCase))
+            {
+                FileHelper.WriteTextWithVerification(schemaPath, "schema_id: rime_mint\nswitches:\n  - name: ascii_mode\n    reset: 0\n  - name: emoji_suggestion\n    reset: 1\n  - name: full_shape\n    reset: 0\n  - name: tone_display\n    reset: 0\n  - name: transcription\n    reset: 0\n  - name: ascii_punct\n    reset: 0\nmenu:\n  page_size: 6\ntranslator:\n  dictionary: rime_mint\n");
+            }
+
+            CommandExecutionResult result = ExecuteApplyWorkflow(
+                configModel: normalizedModel,
+                environment: default!,
+                outputFormat: outputFormat,
+                snapshotId: null,
+                windowsOutputFiles: null,
+                windowsBinaryOutputFiles: null,
+                userDictionaryFiles: null,
+                createArtifacts: true);
+
+            if (forceStopWeasel)
 
         if (forceStopWeasel)
         {
@@ -3554,6 +3564,13 @@ public sealed class WindowsWorkflowService
             string effectiveConfigPath = ResolveMutableConfigPath(configPath);
 
             phase?.Invoke("正在部署并验证…");
+            string targetRoot = RepositoryContext.ExpandPath(updatedModel.SyncSettings.WindowsTargetRoot);
+            Directory.CreateDirectory(targetRoot);
+            string schemaPath = Path.Combine(targetRoot, "rime_mint.schema.yaml");
+            if (!File.Exists(schemaPath) && updatedModel.ProfileSettings.EnabledSchemaIds.Contains("rime_mint", StringComparer.OrdinalIgnoreCase))
+            {
+                FileHelper.WriteTextWithVerification(schemaPath, "schema_id: rime_mint\nswitches:\n  - name: ascii_mode\n    reset: 0\n  - name: emoji_suggestion\n    reset: 1\n  - name: full_shape\n    reset: 0\n  - name: tone_display\n    reset: 0\n  - name: transcription\n    reset: 0\n  - name: ascii_punct\n    reset: 0\nmenu:\n  page_size: 6\ntranslator:\n  dictionary: rime_mint\n");
+            }
             CommandExecutionResult applyResult = ExecuteApplyWorkflow(
                 configModel: updatedModel,
                 environment: default!,
